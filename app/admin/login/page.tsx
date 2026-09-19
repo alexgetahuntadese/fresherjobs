@@ -70,8 +70,12 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
             Continue to dashboard
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-slate-400">New job poster? <Link href={"/admin/register" as never} className="font-medium text-violet-200 transition hover:text-white">Create an account</Link></p>
       </div>
     </main>
   );
 }
+
+
 
