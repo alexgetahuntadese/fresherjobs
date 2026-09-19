@@ -68,7 +68,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="w-full">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <Link href="/" className="inline-flex items-center gap-3" aria-label="FresherJobs home">
-                <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-16 w-auto max-w-[230px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
+                <Image src="/freshers-job-board-logo.png" alt="FresherJobs" width={1674} height={779} priority className="h-16 w-auto max-w-[230px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
               </Link>
               <nav aria-label="Main navigation" className="flex w-full flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-[#0d0b16]/80 p-2 text-base font-semibold text-slate-200 shadow-[0_12px_36px_rgba(0,0,0,0.25)] sm:w-auto">
                 <Link href="/" className="rounded-xl bg-white/[0.08] px-4 py-2.5 text-white transition hover:bg-white/[0.14] hover:text-violet-200">Home</Link>

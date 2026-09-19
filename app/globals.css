@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  --ink: #0d0b16;
+  color-scheme: light;
+  --ink: #ffffff;
   --violet: #8b5cf6;
   --violet-bright: #a78bfa;
   --magenta: #e879f9;
@@ -44,8 +44,8 @@ button {
   .glass-panel {
     @apply border backdrop-blur-xl;
     border-color: rgba(167, 139, 250, 0.28);
-    background: linear-gradient(145deg, rgba(76, 29, 149, 0.96), rgba(30, 27, 75, 0.98) 58%, rgba(88, 28, 135, 0.94));
-    box-shadow: 0 24px 80px rgba(76, 29, 149, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    background: linear-gradient(145deg, #ffffff, #faf5ff 58%, #f3e8ff);
+    box-shadow: 0 24px 70px rgba(124, 58, 237, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.90);
   }
 
   .gradient-border {
@@ -96,11 +96,11 @@ input[type="file"] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d0b16;
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 3px solid #0d0b16;
+  border: 3px solid #ffffff;
   border-radius: 999px;
   background: linear-gradient(#8b5cf6, #d946ef);
 }
@@ -117,4 +117,43 @@ input[type="file"] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Light theme overrides for legacy dark utility classes. */
+[class*="bg-[#ffffff]"] {
+  background-color: #ffffff !important;
+  color: #1e1b4b !important;
+}
+
+[class*="bg-slate-950"] {
+  background-color: #ffffff !important;
+}
+
+.text-white {
+  color: #1e1b4b !important;
+}
+
+.text-slate-100,
+.text-slate-200 {
+  color: #334155 !important;
+}
+
+.text-slate-300 {
+  color: #475569 !important;
+}
+
+.text-slate-400 {
+  color: #64748b !important;
+}
+
+input,
+textarea,
+select {
+  background-color: #ffffff !important;
+  color: #1e1b4b !important;
+  border-color: #ddd6fe !important;
+}
+
+::placeholder {
+  color: #94a3b8;
 }

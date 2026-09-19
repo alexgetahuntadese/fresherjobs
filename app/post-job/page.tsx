@@ -20,7 +20,7 @@ export default async function PostJobPage({ searchParams }: PostJobPageProps) {
       <div className="mx-auto max-w-3xl">
         <div className="mb-8 flex items-center justify-between gap-4">
           <Link href="/" aria-label="FresherJobs home">
-            <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-14 w-auto rounded-2xl bg-white p-2 object-contain" />
+            <Image src="/freshers-job-board-logo.png" alt="FresherJobs" width={1674} height={779} priority className="h-14 w-auto rounded-2xl bg-white p-2 object-contain" />
           </Link>
           <Link href="/" className="text-sm text-violet-200 transition hover:text-white">Back to jobs</Link>
         </div>

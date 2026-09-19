@@ -11,7 +11,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
     <main className="flex min-h-screen items-center justify-center bg-[#0d0b16] px-6 py-16 text-slate-100">
       <div className="w-full max-w-md rounded-3xl border border-white/10 glass-panel p-8 shadow-soft">
         <div className="mb-8 text-center">
-          <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mx-auto mb-6 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 object-contain" />
+          <Image src="/freshers-job-board-logo.png" alt="FresherJobs" width={1674} height={779} priority className="mx-auto mb-6 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 object-contain" />
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">job poster access</p>
           <h1 className="mt-3 font-serif text-3xl font-medium text-white">Create a poster account</h1>
         </div>

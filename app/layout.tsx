@@ -6,7 +6,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'FresherJobs',
   description: 'Curated, admin-driven job listings for emerging talent.',
-  icons: { icon: '/fresherjobs-logo.jpg', apple: '/fresherjobs-logo.jpg' },
+  icons: { icon: '/freshers-job-board-logo.png', apple: '/freshers-job-board-logo.png' },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

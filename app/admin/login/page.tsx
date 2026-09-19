@@ -22,7 +22,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
     <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16">
       <div className="w-full max-w-md rounded-3xl border border-white/10 glass-panel p-8 shadow-soft">
         <div className="mb-8 text-center">
-          <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mx-auto mb-6 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
+          <Image src="/freshers-job-board-logo.png" alt="FresherJobs" width={1674} height={779} priority className="mx-auto mb-6 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
             {isRegistrationComplete ? 'account created' : 'admin access'}
           </p>

@@ -66,7 +66,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="flex min-w-0 flex-col gap-5 rounded-3xl border border-white/10 glass-panel p-6 shadow-soft sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mb-4 h-16 w-auto max-w-[250px] rounded-2xl bg-white p-1.5 shadow-[0_10px_32px_rgba(167,139,250,0.18)] object-contain" />
+            <Image src="/freshers-job-board-logo.png" alt="FresherJobs" width={1674} height={779} priority className="mb-4 h-16 w-auto max-w-[250px] rounded-2xl bg-white p-1.5 shadow-[0_10px_32px_rgba(167,139,250,0.18)] object-contain" />
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
               dashboard
             </p>

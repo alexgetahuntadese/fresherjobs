@@ -17,7 +17,7 @@ export default async function EmployerLoginPage({ searchParams }: EmployerLoginP
   return (
     <main className="flex min-h-screen items-center justify-center px-6 py-16 text-slate-100">
       <section className="glass-panel gradient-border w-full max-w-md rounded-[2rem] p-8 shadow-soft">
-        <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mx-auto mb-8 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 object-contain" />
+        <Image src="/freshers-job-board-logo.png" alt="FresherJobs" width={1674} height={779} priority className="mx-auto mb-8 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 object-contain" />
         <p className="text-center text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">employer portal</p>
         <h1 className="mt-3 text-center font-serif text-3xl font-medium text-white">Track your applicants</h1>
         <p className="mt-3 text-center text-sm leading-6 text-slate-400">Sign in with the employer email and password created in Supabase Auth.</p>
