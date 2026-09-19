@@ -15,6 +15,34 @@ CREATE TABLE IF NOT EXISTS public.jobs (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Employers are Supabase Auth users who can track applicants for assigned jobs.
+CREATE TABLE IF NOT EXISTS public.employers (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  username TEXT NOT NULL UNIQUE,
+  company_name TEXT NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE public.jobs ADD COLUMN IF NOT EXISTS employer_id UUID;
+
+DO $$
+BEGIN
+  ALTER TABLE public.jobs
+    ADD CONSTRAINT jobs_employer_id_fkey
+    FOREIGN KEY (employer_id) REFERENCES public.employers(user_id) ON DELETE SET NULL;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+ALTER TABLE public.employers ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Employers can view their own profile" ON public.employers;
+CREATE POLICY "Employers can view their own profile"
+  ON public.employers
+  FOR SELECT
+  TO authenticated
+  USING (user_id = auth.uid());
 -- Backfill the sector column for databases created before sector filtering was introduced.
 ALTER TABLE public.jobs ADD COLUMN IF NOT EXISTS sector TEXT NOT NULL DEFAULT 'Other';
 
@@ -30,23 +58,23 @@ DROP POLICY IF EXISTS "Allow authenticated delete access" ON public.jobs;
 CREATE POLICY "Allow public read access"
   ON public.jobs
   FOR SELECT
-  USING (published_at IS NOT NULL OR auth.role() = 'authenticated');
+  USING (published_at IS NOT NULL OR (auth.role() = 'authenticated' AND (NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true) OR employer_id = auth.uid())));
 
 CREATE POLICY "Allow authenticated write access"
   ON public.jobs
   FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+  WITH CHECK (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true));
 
 CREATE POLICY "Allow authenticated update access"
   ON public.jobs
   FOR UPDATE
-  USING (auth.role() = 'authenticated')
-  WITH CHECK (auth.role() = 'authenticated');
+  USING (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true))
+  WITH CHECK (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true));
 
 CREATE POLICY "Allow authenticated delete access"
   ON public.jobs
   FOR DELETE
-  USING (auth.role() = 'authenticated');
+  USING (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true));
 
 CREATE INDEX IF NOT EXISTS idx_jobs_published_at
   ON public.jobs (published_at DESC);
@@ -86,7 +114,14 @@ CREATE POLICY "Allow authenticated application access"
   ON public.applications
   FOR SELECT
   TO authenticated
-  USING (true);
+  USING (
+    NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true)
+    OR EXISTS (
+      SELECT 1 FROM public.jobs
+      WHERE jobs.id = applications.job_id
+        AND jobs.employer_id = auth.uid()
+    )
+  );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_job_email
   ON public.applications (job_id, lower(email));
@@ -95,6 +130,17 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_job_email
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('cv-uploads', 'cv-uploads', false)
 ON CONFLICT (id) DO NOTHING;
+
+UPDATE storage.buckets
+SET
+  public = false,
+  file_size_limit = 3145728,
+  allowed_mime_types = ARRAY[
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ]
+WHERE id = 'cv-uploads';
 
 DROP POLICY IF EXISTS "Allow public CV uploads" ON storage.objects;
 DROP POLICY IF EXISTS "Allow authenticated CV access" ON storage.objects;
@@ -109,4 +155,15 @@ CREATE POLICY "Allow authenticated CV access"
   ON storage.objects
   FOR SELECT
   TO authenticated
-  USING (bucket_id = 'cv-uploads');
+  USING (
+    bucket_id = 'cv-uploads'
+    AND (
+      NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true)
+      OR EXISTS (
+        SELECT 1 FROM public.applications
+        JOIN public.jobs ON jobs.id = applications.job_id
+        WHERE applications.cv_path = storage.objects.name
+          AND jobs.employer_id = auth.uid()
+      )
+    )
+  );

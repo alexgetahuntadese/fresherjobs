@@ -22,6 +22,7 @@ export async function createJobAction(formData: FormData) {
   const location = String(formData.get('location') ?? '').trim();
   const jobType = String(formData.get('job_type') ?? '').trim();
   const sector = String(formData.get('sector') ?? '').trim();
+  const employerId = String(formData.get('employer_id') ?? '').trim();
   const applyUrl = String(formData.get('apply_url') ?? '').trim();
   const description = String(formData.get('description') ?? '').trim();
   const isFeatured = formData.get('is_featured') === 'on';
@@ -56,6 +57,7 @@ export async function createJobAction(formData: FormData) {
     location,
     job_type: jobType,
     sector,
+    employer_id: employerId || null,
     apply_url: applyUrl,
     description,
     is_featured: isFeatured,

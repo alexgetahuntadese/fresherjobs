@@ -41,7 +41,9 @@ export default async function ApplyPage({ params, searchParams }: ApplyPageProps
                 ? 'We could not upload that CV. Please try again or submit a public CV link instead.'
                 : query?.error === 'submission_failed'
                   ? 'We could not save your application right now. Please try again in a moment.'
-                  : null;
+                  : query?.error === 'config_error'
+                    ? 'Applications are temporarily unavailable. Please try again later.'
+                    : null;
 
   return (
     <main className="min-h-screen px-6 py-12 text-slate-100 sm:py-20">

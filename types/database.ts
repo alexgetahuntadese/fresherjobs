@@ -9,6 +9,7 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
+          employer_id: string | null;
           sector: string;
           description: string;
           apply_url: string;
@@ -23,7 +24,9 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
+          employer_id: string | null;
           sector?: string;
+          employer_id?: string | null;
           description: string;
           apply_url: string;
           is_featured?: boolean;
@@ -38,6 +41,7 @@ export type Database = {
           location?: string;
           job_type?: string;
           sector?: string;
+          employer_id?: string | null;
           description?: string;
           apply_url?: string;
           is_featured?: boolean;
@@ -46,7 +50,59 @@ export type Database = {
         };
         Relationships: [];
       };
-      applications: {
+      employees: {
+        Row: {
+          [key: string]: unknown;
+          user_id: string;
+          username: string;
+          full_name: string;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          [key: string]: unknown;
+          user_id: string;
+          username: string;
+          full_name: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          [key: string]: unknown;
+          user_id?: string;
+          username?: string;
+          full_name?: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };employers: {
+        Row: {
+          [key: string]: unknown;
+          user_id: string;
+          username: string;
+          company_name: string;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          [key: string]: unknown;
+          user_id: string;
+          username: string;
+          company_name: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          [key: string]: unknown;
+          user_id?: string;
+          username?: string;
+          company_name?: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };      applications: {
         Row: {
           [key: string]: unknown;
           id: string;

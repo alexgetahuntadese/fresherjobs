@@ -34,6 +34,12 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
     console.error('Unable to fetch admin job list.', error);
   }
 
+  const { data: employers } = await supabase
+    .from('employers')
+    .select('user_id, username, company_name')
+    .eq('active', true)
+    .order('company_name');
+
   const errorMessage =
     resolvedSearchParams?.error === 'missing_fields'
       ? 'Please complete every required field before publishing a job.'
@@ -153,6 +159,24 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 >
                   {JOB_SECTORS.map((sector) => (
                     <option key={sector} value={sector}>{sector}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="employer_id" className="text-sm font-medium text-slate-200">
+                  Assign employer
+                </label>
+                <select
+                  id="employer_id"
+                  name="employer_id"
+                  defaultValue=""
+                  className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition focus:border-violet-300"
+                >
+                  <option value="">Unassigned (admin managed)</option>
+                  {employers?.map((employer) => (
+                    <option key={employer.user_id} value={employer.user_id}>
+                      {employer.company_name} · {employer.username}
+                    </option>
                   ))}
                 </select>
               </div>

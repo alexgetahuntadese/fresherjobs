@@ -18,7 +18,7 @@ export async function submitApplicationAction(formData: FormData) {
   const phone = String(formData.get('phone') ?? '').trim();
   const cvUrl = String(formData.get('cv_url') ?? '').trim();
   const fileValue = formData.get('cv_file');
-  const cvFile = fileValue instanceof File && fileValue.size > 0 ? fileValue : null;
+  const cvFile = typeof File !== 'undefined' && fileValue instanceof File && fileValue.size > 0 ? fileValue : null;
 
   if (!jobId || !fullName || !email || !phone || (!cvUrl && !cvFile)) {
     redirect(`/apply/${jobId}?error=missing_fields`);
@@ -43,36 +43,54 @@ export async function submitApplicationAction(formData: FormData) {
     redirect(`/apply/${jobId}?error=invalid_cv_file`);
   }
 
-  const supabase = await createClient();
-  let cvPath: string | null = null;
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    redirect(`/apply/${jobId}?error=config_error`);
+  }
 
+  let cvPath: string | null = null;
   if (cvFile) {
     const extension = cvFile.name.split('.').pop()?.toLowerCase() || 'pdf';
     cvPath = `${jobId}/${randomUUID()}.${extension}`;
-    const { error: uploadError } = await supabase.storage
-      .from('cv-uploads')
-      .upload(cvPath, cvFile, { contentType: cvFile.type, upsert: false });
+    let uploadError: { message: string } | null = null;
+
+    try {
+      const result = await supabase.storage
+        .from('cv-uploads')
+        .upload(cvPath, cvFile, { contentType: cvFile.type, upsert: false });
+      uploadError = result.error;
+    } catch {
+      uploadError = { message: 'CV upload failed' };
+    }
 
     if (uploadError) {
-      throw new Error(`Unable to upload CV: ${uploadError.message}`);
+      redirect(`/apply/${jobId}?error=upload_failed`);
     }
   }
 
-  const { error } = await supabase.from('applications').insert({
-    job_id: jobId,
-    full_name: fullName,
-    email,
-    phone,
-    cv_url: cvUrl || null,
-    cv_path: cvPath,
-  });
+  let applicationError: { code?: string; message: string } | null = null;
+  try {
+    const result = await supabase.from('applications').insert({
+      job_id: jobId,
+      full_name: fullName,
+      email,
+      phone,
+      cv_url: cvUrl || null,
+      cv_path: cvPath,
+    });
+    applicationError = result.error;
+  } catch {
+    applicationError = { message: 'Application save failed' };
+  }
 
-  if (error?.code === '23505') {
+  if (applicationError?.code === '23505') {
     redirect(`/apply/${jobId}?error=duplicate_application`);
   }
 
-  if (error) {
-    throw new Error(`Unable to submit application: ${error.message}`);
+  if (applicationError) {
+    redirect(`/apply/${jobId}?error=submission_failed`);
   }
 
   redirect(`/apply/${jobId}?success=1`);
