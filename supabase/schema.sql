@@ -70,18 +70,18 @@ CREATE POLICY "Allow public read access"
 CREATE POLICY "Allow authenticated write access"
   ON public.jobs
   FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true));
+  WITH CHECK (auth.role() = 'authenticated' AND (NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true) OR employer_id = auth.uid()));
 
 CREATE POLICY "Allow authenticated update access"
   ON public.jobs
   FOR UPDATE
-  USING (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true))
-  WITH CHECK (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true));
+  USING (auth.role() = 'authenticated' AND (NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true) OR employer_id = auth.uid()))
+  WITH CHECK (auth.role() = 'authenticated' AND (NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true) OR employer_id = auth.uid()));
 
 CREATE POLICY "Allow authenticated delete access"
   ON public.jobs
   FOR DELETE
-  USING (auth.role() = 'authenticated' AND NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true));
+  USING (auth.role() = 'authenticated' AND (NOT EXISTS (SELECT 1 FROM public.employers WHERE user_id = auth.uid() AND active = true) OR employer_id = auth.uid()));
 
 CREATE INDEX IF NOT EXISTS idx_jobs_published_at
   ON public.jobs (published_at DESC);
@@ -174,4 +174,6 @@ CREATE POLICY "Allow authenticated CV access"
       )
     )
   );
+
+
 

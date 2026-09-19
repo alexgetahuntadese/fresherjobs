@@ -17,12 +17,19 @@ export async function createJobAction(formData: FormData) {
     redirect('/admin/login');
   }
 
+  const { data: employerProfile } = await supabase
+    .from('employers')
+    .select('user_id, active')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
   const title = String(formData.get('title') ?? '').trim();
   const companyName = String(formData.get('company_name') ?? '').trim();
   const location = String(formData.get('location') ?? '').trim();
   const jobType = String(formData.get('job_type') ?? '').trim();
   const sector = String(formData.get('sector') ?? '').trim();
-  const employerId = String(formData.get('employer_id') ?? '').trim();
+  const requestedEmployerId = String(formData.get('employer_id') ?? '').trim();
+  const employerId = employerProfile?.active ? user.id : requestedEmployerId;
   const applyUrl = String(formData.get('apply_url') ?? '').trim();
   const description = String(formData.get('description') ?? '').trim();
   const isFeatured = formData.get('is_featured') === 'on';
@@ -103,3 +110,4 @@ export async function deleteJobAction(formData: FormData) {
   revalidatePath('/admin/dashboard');
   redirect('/admin/dashboard');
 }
+
