@@ -127,7 +127,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                     type="text"
                     required
                     className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition focus:border-violet-300"
-                    placeholder="Remote • US"
+                    placeholder="Remote â€¢ US"
                   />
                 </div>
 
@@ -179,7 +179,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                   <option value="">Unassigned (admin managed)</option>
                   {employers?.map((employer) => (
                     <option key={employer.user_id} value={employer.user_id}>
-                      {employer.company_name} · {employer.username}
+                      {employer.company_name} Â· {employer.username}
                     </option>
                   ))}
                 </select>
@@ -217,7 +217,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 Mark as featured listing
               </label>
 
-              <SubmitButton pendingLabel="Publishing…">Publish job</SubmitButton>
+              <SubmitButton pendingLabel="Publishingâ€¦">Publish job</SubmitButton>
             </form>
           </div>
 
@@ -240,7 +240,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       <div>
                         <h3 className="text-lg font-semibold text-white">{job.title}</h3>
                         <p className="mt-1 text-sm text-slate-400">
-                          {job.company_name} • {job.location}
+                          {job.company_name} â€¢ {job.location}
                         </p>
                       </div>
 

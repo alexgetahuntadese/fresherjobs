@@ -162,7 +162,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
                 <p className="mt-5 text-sm leading-7 text-slate-300 transition-colors group-hover:text-slate-200">
                   {job.description.length > 180
-                    ? `${job.description.slice(0, 180).trimEnd()}…`
+                    ? `${job.description.slice(0, 180).trimEnd()}â€¦`
                     : job.description}
                 </p>
 

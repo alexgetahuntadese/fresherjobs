@@ -63,11 +63,11 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
               autoComplete="current-password"
               required
               className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-violet-300"
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
             />
           </div>
 
-          <SubmitButton pendingLabel="Signing in�">Continue to dashboard</SubmitButton>
+          <SubmitButton pendingLabel="Signing in…">Continue to dashboard</SubmitButton>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-400">New job poster? <Link href={"/admin/register" as never} className="font-medium text-violet-200 transition hover:text-white">Create an account</Link></p>
