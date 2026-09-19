@@ -65,10 +65,18 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-[28rem] h-[32rem] w-[32rem] rounded-full bg-fuchsia-500/10 blur-3xl" />
       <div className="relative mx-auto max-w-6xl px-6 py-16 sm:px-8 lg:px-12">
         <header className="glass-panel mb-12 flex flex-col gap-6 rounded-[2rem] p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
-          <div>
-            <Link href="/" className="mb-6 inline-flex items-center gap-3" aria-label="FresherJobs home">
-              <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-20 w-auto max-w-[280px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
-            </Link>
+          <div className="w-full">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <Link href="/" className="inline-flex items-center gap-3" aria-label="FresherJobs home">
+                <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-16 w-auto max-w-[230px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
+              </Link>
+              <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-slate-300">
+                <Link href="/" className="text-white transition hover:text-violet-200">Home</Link>
+                <Link href="/#jobs" className="transition hover:text-white">New jobs</Link>
+                <Link href="/admin/login" className="transition hover:text-white">Post a job</Link>
+                <Link href="/admin/login" className="rounded-full border border-violet-300/30 bg-violet-400/10 px-4 py-2 text-violet-100 transition hover:border-violet-200/60 hover:bg-violet-400/20">Premium</Link>
+              </nav>
+            </div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
               curated opportunities
             </p>
@@ -124,7 +132,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             </p>
           </section>
         ) : (
-          <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <section id="jobs" className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {publishedJobs.map((job) => (
               <article
                 key={job.id}
