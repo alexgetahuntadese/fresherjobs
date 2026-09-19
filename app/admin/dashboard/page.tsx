@@ -6,11 +6,11 @@ import { createClient } from '@/lib/supabase/server';
 import { SubmitButton } from '@/app/components/submit-button';
 import { JOB_SECTORS } from '@/lib/job-sectors';
 
-import { createJobAction, deleteJobAction } from './actions';
+import { createJobAction, deleteJobAction, releaseJobAction, updateJobAction } from './actions';
 import { signOutAction } from '../login/actions';
 
 type DashboardPageProps = {
-  searchParams?: Promise<{ error?: string }>;
+  searchParams?: Promise<{ error?: string; success?: string }>;
 };
 
 export default async function AdminDashboardPage({ searchParams }: DashboardPageProps) {
@@ -53,6 +53,12 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
             : resolvedSearchParams?.error === 'duplicate_job'
             ? 'A matching job already exists for this company and location.'
             : null;
+  const successMessage =
+    resolvedSearchParams?.success === 'updated'
+      ? 'Job details saved.'
+      : resolvedSearchParams?.success === 'released'
+        ? 'Job released to the public board.'
+        : null;
 
   return (
     <main className="min-h-screen bg-[#0d0b16] px-6 py-10 text-slate-100">
@@ -80,6 +86,12 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         {errorMessage ? (
           <div className="rounded-2xl border border-fuchsia-400/40 bg-fuchsia-400/10 px-4 py-3 text-sm text-fuchsia-200">
             {errorMessage}
+          </div>
+        ) : null}
+
+        {successMessage ? (
+          <div className="rounded-2xl border border-emerald-400/40 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200" aria-live="polite">
+            {successMessage}
           </div>
         ) : null}
 
@@ -257,6 +269,28 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                     </div>
 
                     <p className="mt-3 line-clamp-3 text-sm text-slate-300">{job.description}</p>
+
+                    <details className="mt-4 rounded-2xl border border-violet-300/15 bg-violet-400/[0.04]">
+                      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:text-white"><span className="mr-2 text-violet-300">⌄</span> Review and edit full job details</summary>
+                      <form action={updateJobAction} className="space-y-4 border-t border-white/10 p-4">
+                        <input type="hidden" name="id" value={job.id} />
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <label className="space-y-2 text-sm text-slate-200"><span>Job title</span><input name="title" required defaultValue={job.title} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" /></label>
+                          <label className="space-y-2 text-sm text-slate-200"><span>Company name</span><input name="company_name" required defaultValue={job.company_name} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" /></label>
+                          <label className="space-y-2 text-sm text-slate-200"><span>Location</span><input name="location" required defaultValue={job.location} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" /></label>
+                          <label className="space-y-2 text-sm text-slate-200"><span>Job type</span><select name="job_type" required defaultValue={job.job_type} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option></select></label>
+                          <label className="space-y-2 text-sm text-slate-200"><span>Sector</span><select name="sector" required defaultValue={job.sector} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300">{JOB_SECTORS.map((sector) => <option key={sector}>{sector}</option>)}</select></label>
+                          <label className="space-y-2 text-sm text-slate-200"><span>Assign employer</span><select name="employer_id" defaultValue={job.employer_id ?? ''} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300"><option value="">Unassigned (admin managed)</option>{employers?.map((employer) => <option key={employer.user_id} value={employer.user_id}>{employer.company_name} · {employer.username}</option>)}</select></label>
+                        </div>
+                        <label className="block space-y-2 text-sm text-slate-200"><span>Apply URL</span><input name="apply_url" type="url" required defaultValue={job.apply_url} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" /></label>
+                        <label className="block space-y-2 text-sm text-slate-200"><span>Full description</span><textarea name="description" required rows={10} defaultValue={job.description} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" /></label>
+                        <label className="flex items-center gap-3 text-sm text-slate-300"><input type="checkbox" name="is_featured" defaultChecked={job.is_featured} className="h-4 w-4 rounded border-white/10 bg-[#0d0b16]" /> Mark as featured listing</label>
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+                          <button type="submit" className="rounded-full bg-violet-300 px-4 py-2 text-sm font-semibold text-violet-950 transition hover:bg-violet-200">Save changes</button>
+                          {job.published_at ? <span className="text-sm text-emerald-200">Already live on the public board</span> : <button type="submit" formAction={releaseJobAction} className="rounded-full bg-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-200">Release to public board</button>}
+                        </div>
+                      </form>
+                    </details>
 
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                       <a

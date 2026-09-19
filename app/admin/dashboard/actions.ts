@@ -111,3 +111,56 @@ export async function deleteJobAction(formData: FormData) {
   redirect('/admin/dashboard');
 }
 
+
+
+function getJobFields(formData: FormData) {
+  return {
+    title: String(formData.get('title') ?? '').trim(),
+    company_name: String(formData.get('company_name') ?? '').trim(),
+    location: String(formData.get('location') ?? '').trim(),
+    job_type: String(formData.get('job_type') ?? '').trim(),
+    sector: String(formData.get('sector') ?? '').trim(),
+    employer_id: String(formData.get('employer_id') ?? '').trim() || null,
+    apply_url: String(formData.get('apply_url') ?? '').trim(),
+    description: String(formData.get('description') ?? '').trim(),
+    is_featured: formData.get('is_featured') === 'on',
+  };
+}
+
+async function requireAuthenticatedAdmin() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/admin/login');
+  return supabase;
+}
+
+export async function updateJobAction(formData: FormData) {
+  const supabase = await requireAuthenticatedAdmin();
+  const jobId = String(formData.get('id') ?? '').trim();
+  const fields = getJobFields(formData);
+  if (!jobId) redirect('/admin/dashboard?error=missing_id');
+  if (!fields.title || !fields.company_name || !fields.location || !fields.job_type || !fields.sector || !fields.apply_url || !fields.description) redirect('/admin/dashboard?error=missing_fields');
+  try {
+    const parsedUrl = new URL(fields.apply_url);
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) redirect('/admin/dashboard?error=invalid_url');
+  } catch {
+    redirect('/admin/dashboard?error=invalid_url');
+  }
+  const { error } = await supabase.from('jobs').update(fields).eq('id', jobId);
+  if (error?.code === '23505') redirect('/admin/dashboard?error=duplicate_job');
+  if (error) throw new Error('Unable to update job: ' + error.message);
+  revalidatePath('/');
+  revalidatePath('/admin/dashboard');
+  redirect('/admin/dashboard?success=updated');
+}
+
+export async function releaseJobAction(formData: FormData) {
+  const supabase = await requireAuthenticatedAdmin();
+  const jobId = String(formData.get('id') ?? '').trim();
+  if (!jobId) redirect('/admin/dashboard?error=missing_id');
+  const { error } = await supabase.from('jobs').update({ published_at: new Date().toISOString() }).eq('id', jobId).is('published_at', null);
+  if (error) throw new Error('Unable to release job: ' + error.message);
+  revalidatePath('/');
+  revalidatePath('/admin/dashboard');
+  redirect('/admin/dashboard?success=released');
+}
