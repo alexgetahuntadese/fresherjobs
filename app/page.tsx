@@ -5,12 +5,26 @@ import type { Database } from '@/types/database';
 
 // Public job board. Rebuilds every 60 seconds to keep the board fresh without full static rebuilds.
 export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 type JobRecord = Database['public']['Tables']['jobs']['Row'];
 
 export default async function HomePage() {
-  const supabase = await createClient();
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-16 text-slate-100">
+        <section className="w-full max-w-xl rounded-3xl border border-amber-500/40 bg-slate-900/90 p-8 text-center shadow-soft">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-300">setup required</p>
+          <h1 className="mt-3 text-3xl font-bold text-white">FresherJobs is almost ready</h1>
+          <p className="mt-4 text-slate-300">
+            Connect the Supabase project in Vercel by adding the required environment variables.
+          </p>
+        </section>
+      </main>
+    );
+  }
 
+  const supabase = await createClient();
   const { data: jobs, error } = await supabase
     .from('jobs')
     .select('*')
