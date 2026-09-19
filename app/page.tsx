@@ -74,7 +74,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <Link href="/" className="rounded-xl bg-white/[0.08] px-4 py-2.5 text-white transition hover:bg-white/[0.14] hover:text-violet-200">Home</Link>
                 <Link href="/#jobs" className="rounded-xl px-4 py-2.5 transition hover:bg-white/[0.08] hover:text-white">New jobs</Link>
                 <Link href="/post-job" className="rounded-xl px-4 py-2.5 transition hover:bg-white/[0.08] hover:text-white">Post a job</Link>
-                <Link href="/admin/login" className="rounded-xl border border-violet-300/40 bg-violet-400/15 px-4 py-2.5 text-violet-100 transition hover:border-violet-200/70 hover:bg-violet-400/25">Premium</Link>
+                <Link href="/admin/login" className="rounded-xl border border-violet-300/40 bg-violet-400/15 px-4 py-2.5 text-violet-100 transition hover:border-violet-200/70 hover:bg-violet-400/25">Admin access</Link>
               </nav>
             </div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
@@ -162,7 +162,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
                 <p className="mt-5 text-sm leading-7 text-slate-300 transition-colors group-hover:text-slate-200">
                   {job.description.length > 180
-                    ? `${job.description.slice(0, 180).trimEnd()}â€¦`
+                    ? `${job.description.slice(0, 180).trimEnd()}…`
                     : job.description}
                 </p>
 

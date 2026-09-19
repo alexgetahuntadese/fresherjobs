@@ -57,6 +57,10 @@ export default async function ApplyPage({ params, searchParams }: ApplyPageProps
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">application</p>
             <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-white">Apply for {job.title}</h1>
             <p className="mt-3 text-slate-300">{job.company_name} · {job.location}</p>
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-sm font-medium text-white">About this role</p>
+              <p className="mt-2 whitespace-pre-line text-sm leading-7 text-slate-300">{job.description}</p>
+            </div>
           </div>
 
           {query?.success ? (

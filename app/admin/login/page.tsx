@@ -64,7 +64,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
               autoComplete="current-password"
               required
               className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-violet-300"
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="••••••••"
             />
           </div>
 

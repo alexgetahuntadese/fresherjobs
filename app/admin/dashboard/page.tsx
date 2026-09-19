@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { createClient } from '@/lib/supabase/server';
 import { SubmitButton } from '@/app/components/submit-button';
+import { ConfirmSubmitButton } from '@/app/components/confirm-submit-button';
 import { JOB_SECTORS } from '@/lib/job-sectors';
 
 import { createJobAction, deleteJobAction, releaseJobAction, updateJobAction } from './actions';
@@ -139,7 +140,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                     type="text"
                     required
                     className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition focus:border-violet-300"
-                    placeholder="Remote â€¢ US"
+                    placeholder="Remote • US"
                   />
                 </div>
 
@@ -191,7 +192,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                   <option value="">Unassigned (admin managed)</option>
                   {employers?.map((employer) => (
                     <option key={employer.user_id} value={employer.user_id}>
-                      {employer.company_name} Â· {employer.username}
+                      {employer.company_name} · {employer.username}
                     </option>
                   ))}
                 </select>
@@ -229,7 +230,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 Mark as featured listing
               </label>
 
-              <SubmitButton pendingLabel="Publishingâ€¦">Publish job</SubmitButton>
+              <SubmitButton pendingLabel="Publishing…">Publish job</SubmitButton>
             </form>
           </div>
 
@@ -252,7 +253,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       <div>
                         <h3 className="text-lg font-semibold text-white">{job.title}</h3>
                         <p className="mt-1 text-sm text-slate-400">
-                          {job.company_name} â€¢ {job.location}
+                          {job.company_name} • {job.location}
                         </p>
                       </div>
 
@@ -304,12 +305,12 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
 
                       <form action={deleteJobAction} className="inline-flex">
                         <input type="hidden" name="id" value={job.id} />
-                        <button
-                          type="submit"
+                        <ConfirmSubmitButton
+                          message="Delete this job listing? This action cannot be undone."
                           className="rounded-full border border-fuchsia-400/40 bg-fuchsia-400/10 px-3 py-1.5 text-sm font-medium text-fuchsia-200 transition hover:bg-fuchsia-400/20"
                         >
                           Delete
-                        </button>
+                        </ConfirmSubmitButton>
                       </form>
                     </div>
                   </article>
