@@ -15,7 +15,8 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
     resolvedSearchParams?.error === 'invalid_credentials'
       ? 'The email or password is incorrect. Please try again.'
       : null;
-  const registrationNotice = resolvedSearchParams?.registered === '1' ? 'Account created. Check your email if confirmation is required, then sign in.' : null;
+  const isRegistrationComplete = resolvedSearchParams?.registered === '1';
+  const registrationNotice = isRegistrationComplete ? 'Account created. Check your email if confirmation is required, then sign in.' : null;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#0d0b16] px-6 py-16">
@@ -23,9 +24,9 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
         <div className="mb-8 text-center">
           <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mx-auto mb-6 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
-            admin access
+            {isRegistrationComplete ? 'account created' : 'admin access'}
           </p>
-          <h1 className="mt-3 font-serif text-3xl font-medium text-white">Sign in</h1>
+          <h1 className="mt-3 font-serif text-3xl font-medium text-white">{isRegistrationComplete ? 'Check your email' : 'Sign in'}</h1>
         </div>
 
         {registrationNotice ? <div aria-live="polite" className="mb-5 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-200">{registrationNotice}</div> : null}
@@ -70,7 +71,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
           <SubmitButton pendingLabel="Signing in…">Continue to dashboard</SubmitButton>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">New job poster? <Link href={"/admin/register" as never} className="font-medium text-violet-200 transition hover:text-white">Create an account</Link></p>
+        <p className="mt-6 text-center text-sm text-slate-400">New job poster? <Link href="/admin/register" className="font-medium text-violet-200 transition hover:text-white">Create an account</Link></p>
       </div>
     </main>
   );
