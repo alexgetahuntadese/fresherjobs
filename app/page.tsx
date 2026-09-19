@@ -67,14 +67,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <header className="glass-panel mb-12 flex flex-col gap-6 rounded-[2rem] p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
           <div>
             <Link href="/" className="mb-6 inline-flex items-center gap-3" aria-label="FresherJobs home">
-              <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-16 w-auto rounded-xl object-contain" />
+              <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-20 w-auto max-w-[280px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
             </Link>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
               curated opportunities
             </p>
             <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-white sm:text-6xl">
               Fresh roles for <span className="text-gradient">ambitious talent</span>
-            </h1>
+            </h1>            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+              Discover thoughtful opportunities across Ethiopia, built for people ready to make their next move.
+            </p>
           </div>
         </header>
 

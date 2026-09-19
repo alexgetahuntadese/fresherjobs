@@ -72,3 +72,47 @@ button {
     color: transparent;
   }
 }
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 3px;
+}
+
+button,
+a,
+select,
+input[type="file"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::placeholder {
+  color: rgba(148, 163, 184, 0.62);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0d0b16;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid #0d0b16;
+  border-radius: 999px;
+  background: linear-gradient(#8b5cf6, #d946ef);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

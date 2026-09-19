@@ -39,7 +39,7 @@ export async function submitApplicationAction(formData: FormData) {
     }
   }
 
-  if (cvFile && (!allowedCvTypes.has(cvFile.type) || cvFile.size > 5 * 1024 * 1024)) {
+  if (cvFile && (!allowedCvTypes.has(cvFile.type) || cvFile.size > 3 * 1024 * 1024)) {
     redirect(`/apply/${jobId}?error=invalid_cv_file`);
   }
 
