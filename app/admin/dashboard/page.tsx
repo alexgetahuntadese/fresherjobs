@@ -62,7 +62,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         : null;
 
   return (
-    <main className="min-h-screen bg-[#0d0b16] px-6 py-10 text-slate-100">
+    <main className="min-h-screen bg-white px-6 py-10 text-slate-900">
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="flex min-w-0 flex-col gap-5 rounded-3xl border border-white/10 glass-panel p-6 shadow-soft sm:flex-row sm:items-center sm:justify-between">
           <div>

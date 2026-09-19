@@ -19,7 +19,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const registrationNotice = isRegistrationComplete ? 'Account created. Check your email if confirmation is required, then sign in.' : null;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#0d0b16] px-6 py-16">
+    <main className="flex min-h-screen items-center justify-center bg-white px-6 py-16">
       <div className="w-full max-w-md rounded-3xl border border-white/10 glass-panel p-8 shadow-soft">
         <div className="mb-8 text-center">
           <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mx-auto mb-6 h-24 w-auto max-w-[300px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
