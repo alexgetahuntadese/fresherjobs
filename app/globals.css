@@ -68,7 +68,7 @@ button {
   }
 
   .text-gradient {
-    background: linear-gradient(110deg, #c4b5fd, #f0abfc 75%);
+    background: linear-gradient(110deg, #6d28d9, #c026d3 75%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -164,3 +164,14 @@ main.bg-white,
 main.bg-slate-950 {
   background-color: #f5f3ff !important;
 }
+
+
+/* Stronger text colors for the light purple theme. */
+.text-violet-100 { color: #5b21b6 !important; }
+.text-violet-200,
+.text-violet-300 { color: #6d28d9 !important; }
+.text-fuchsia-100,
+.text-fuchsia-200 { color: #a21caf !important; }
+.text-emerald-100,
+.text-emerald-200 { color: #047857 !important; }
+.text-slate-500 { color: #64748b !important; }
