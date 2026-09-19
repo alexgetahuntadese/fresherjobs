@@ -166,16 +166,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     : job.description}
                 </p>
 
-                {job.description.length > 180 ? (
-                  <details className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04]">
+                {<details className="mt-3 rounded-2xl border border-white/10 bg-white/[0.04]">
                     <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:text-white">
-                      View full job description <span className="ml-1 text-violet-300">⌄</span>
+                      Read full job description <span className="ml-1 text-violet-300">⌄</span>
                     </summary>
                     <div className="border-t border-white/10 px-4 py-4 text-sm leading-7 whitespace-pre-line text-slate-300">
                       {job.description}
                     </div>
-                  </details>
-                ) : null}
+                  </details>}
 
                 <div className="mt-6 flex items-center justify-between gap-4 border-t border-slate-800 pt-5">
                   <span className="text-xs text-slate-400">
