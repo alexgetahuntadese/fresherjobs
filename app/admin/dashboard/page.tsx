@@ -64,7 +64,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
   return (
     <main className="min-h-screen bg-[#0d0b16] px-6 py-10 text-slate-100">
       <div className="mx-auto max-w-6xl space-y-8">
-        <header className="flex flex-col gap-4 rounded-3xl border border-white/10 glass-panel p-6 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+        <header className="flex min-w-0 flex-col gap-5 rounded-3xl border border-white/10 glass-panel p-6 shadow-soft sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mb-4 h-16 w-auto max-w-[250px] rounded-2xl bg-white p-1.5 shadow-[0_10px_32px_rgba(167,139,250,0.18)] object-contain" />
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
@@ -73,6 +73,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
             <h1 className="mt-2 font-serif text-3xl font-medium text-white">Manage job listings</h1>
           </div>
 
+          <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/"
             className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[#0d0b16] px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-600"
@@ -82,6 +83,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
           <form action={signOutAction} className="inline-flex">
             <button type="submit" className="inline-flex items-center justify-center rounded-full border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-medium text-fuchsia-100 transition hover:bg-fuchsia-400/20">Sign out</button>
           </form>
+          </div>
         </header>
 
         {errorMessage ? (
@@ -96,8 +98,8 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
           </div>
         ) : null}
 
-        <section className="grid gap-8 lg:grid-cols-[1.1fr_1.4fr]">
-          <div className="rounded-3xl border border-white/10 glass-panel p-6 shadow-soft">
+        <section className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
+          <div className="min-w-0 overflow-hidden rounded-3xl border border-white/10 glass-panel p-6 shadow-soft">
             <h2 className="text-xl font-semibold text-white">Create a job</h2>
 
             <form action={createJobAction} className="mt-6 space-y-4">
@@ -251,8 +253,8 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="min-w-0">
-                        <h3 className="break-words text-lg font-semibold text-white">{job.title}</h3>
-                        <p className="mt-1 break-words text-sm text-slate-400">
+                        <h3 className="break-all text-lg font-semibold text-white">{job.title}</h3>
+                        <p className="mt-1 break-all text-sm text-slate-400">
                           {job.company_name} • {job.location}
                         </p>
                       </div>
@@ -269,10 +271,10 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       </div>
                     </div>
 
-                    <p className="mt-3 line-clamp-2 break-words text-sm leading-6 text-slate-300">{job.description}</p>
+                    <p className="mt-3 line-clamp-2 break-all text-sm leading-6 text-slate-300">{job.description}</p>
 
                     <details className="mt-4 rounded-2xl border border-violet-300/15 bg-violet-400/[0.04]">
-                      <summary className="cursor-pointer select-none list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:bg-violet-400/10 hover:text-white"><span className="mr-2 text-violet-300">▾</span> Review and edit full job details</summary>
+                      <summary className="cursor-pointer select-none break-words list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:bg-violet-400/10 hover:text-white"><span className="mr-2 text-violet-300">▾</span> Review and edit full job details</summary>
                       <form action={updateJobAction} className="space-y-4 border-t border-white/10 p-4">
                         <input type="hidden" name="id" value={job.id} />
                         <div className="grid gap-4 sm:grid-cols-2">
