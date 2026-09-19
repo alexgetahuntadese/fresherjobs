@@ -162,7 +162,7 @@ select {
 
 main.bg-white,
 main.bg-slate-950 {
-  background-color: #ede9fe !important;
+  background-color: #4C1D95 !important;
 }
 
 
@@ -180,9 +180,9 @@ main.bg-slate-950 {
 /* Final light-purple polish: clearer hierarchy and contrast on every surface. */
 body {
   background:
-    radial-gradient(circle at 8% 0%, rgba(124, 58, 237, 0.25), transparent 28rem),
-    radial-gradient(circle at 94% 8%, rgba(192, 38, 211, 0.20), transparent 30rem),
-    linear-gradient(135deg, #ede9fe 0%, #f5f3ff 42%, #faf5ff 72%, #e9d5ff 100%);
+    radial-gradient(circle at 8% 0%, rgba(139, 92, 246, 0.42), transparent 28rem),
+    radial-gradient(circle at 94% 8%, rgba(192, 38, 211, 0.30), transparent 30rem),
+    #4C1D95;
 }
 
 [class*="border-white/10"] {
