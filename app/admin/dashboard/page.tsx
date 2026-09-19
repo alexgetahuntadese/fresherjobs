@@ -268,10 +268,10 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       </div>
                     </div>
 
-                    <p className="mt-3 line-clamp-3 text-sm text-slate-300">{job.description}</p>
+                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-300">{job.description}</p>
 
                     <details className="mt-4 rounded-2xl border border-violet-300/15 bg-violet-400/[0.04]">
-                      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:text-white"><span className="mr-2 text-violet-300">⌄</span> Review and edit full job details</summary>
+                      <summary className="cursor-pointer select-none list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:bg-violet-400/10 hover:text-white"><span className="mr-2 text-violet-300">▾</span> Review and edit full job details</summary>
                       <form action={updateJobAction} className="space-y-4 border-t border-white/10 p-4">
                         <input type="hidden" name="id" value={job.id} />
                         <div className="grid gap-4 sm:grid-cols-2">
