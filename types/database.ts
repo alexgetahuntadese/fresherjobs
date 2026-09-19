@@ -1,3 +1,5 @@
+type JobEmployerId = string | null;
+
 export type Database = {
   public: {
     Tables: {
@@ -9,7 +11,7 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
-          employer_id: string | null;
+          employer_id: JobEmployerId;
           sector: string;
           description: string;
           apply_url: string;
@@ -24,7 +26,7 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
-          employer_id?: string | null;
+          employer_id?: JobEmployerId;
           sector?: string;
           description: string;
           apply_url: string;
@@ -39,7 +41,7 @@ export type Database = {
           company_name?: string;
           location?: string;
           job_type?: string;
-          employer_id?: string | null;
+          employer_id?: JobEmployerId;
           sector?: string;
           description?: string;
           apply_url?: string;

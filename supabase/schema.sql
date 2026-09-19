@@ -89,6 +89,10 @@ CREATE INDEX IF NOT EXISTS idx_jobs_published_at
 CREATE INDEX IF NOT EXISTS idx_jobs_created_at
   ON public.jobs (created_at DESC);
 
+CREATE INDEX IF NOT EXISTS idx_jobs_employer_id
+  ON public.jobs (employer_id)
+  WHERE employer_id IS NOT NULL;
+
 -- Prevent accidental duplicate job listings for the same company and location.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_jobs_unique_listing
   ON public.jobs (lower(title), lower(company_name), lower(location));
@@ -115,7 +119,14 @@ CREATE POLICY "Allow public application submissions"
   ON public.applications
   FOR INSERT
   TO anon, authenticated
-  WITH CHECK (true);
+  WITH CHECK (
+    EXISTS (
+      SELECT 1
+      FROM public.jobs
+      WHERE jobs.id = applications.job_id
+        AND jobs.published_at IS NOT NULL
+    )
+  );
 
 CREATE POLICY "Allow authenticated application access"
   ON public.applications
@@ -132,6 +143,10 @@ CREATE POLICY "Allow authenticated application access"
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_job_email
   ON public.applications (job_id, lower(email));
+
+CREATE INDEX IF NOT EXISTS idx_applications_cv_path
+  ON public.applications (cv_path)
+  WHERE cv_path IS NOT NULL;
 
 -- Private CV storage. Applications store a path, not public file access.
 INSERT INTO storage.buckets (id, name, public)
@@ -156,7 +171,16 @@ CREATE POLICY "Allow public CV uploads"
   ON storage.objects
   FOR INSERT
   TO anon, authenticated
-  WITH CHECK (bucket_id = 'cv-uploads');
+  WITH CHECK (
+    bucket_id = 'cv-uploads'
+    AND split_part(name, '/', 1) ~ '^[0-9a-fA-F-]{36}$'
+    AND EXISTS (
+      SELECT 1
+      FROM public.jobs
+      WHERE jobs.id::text = split_part(storage.objects.name, '/', 1)
+        AND jobs.published_at IS NOT NULL
+    )
+  );
 
 CREATE POLICY "Allow authenticated CV access"
   ON storage.objects
