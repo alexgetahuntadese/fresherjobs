@@ -49,3 +49,60 @@ CREATE INDEX IF NOT EXISTS idx_jobs_published_at
 
 CREATE INDEX IF NOT EXISTS idx_jobs_created_at
   ON public.jobs (created_at DESC);
+
+-- Prevent accidental duplicate job listings for the same company and location.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_jobs_unique_listing
+  ON public.jobs (lower(title), lower(company_name), lower(location));
+
+-- Candidate applications submitted from the public application form.
+CREATE TABLE IF NOT EXISTS public.applications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  job_id UUID NOT NULL REFERENCES public.jobs(id) ON DELETE CASCADE,
+  full_name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  cv_url TEXT,
+  cv_path TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT applications_cv_source_check CHECK (cv_url IS NOT NULL OR cv_path IS NOT NULL)
+);
+
+ALTER TABLE public.applications ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public application submissions" ON public.applications;
+DROP POLICY IF EXISTS "Allow authenticated application access" ON public.applications;
+
+CREATE POLICY "Allow public application submissions"
+  ON public.applications
+  FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (true);
+
+CREATE POLICY "Allow authenticated application access"
+  ON public.applications
+  FOR SELECT
+  TO authenticated
+  USING (true);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_job_email
+  ON public.applications (job_id, lower(email));
+
+-- Private CV storage. Applications store a path, not public file access.
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('cv-uploads', 'cv-uploads', false)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Allow public CV uploads" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated CV access" ON storage.objects;
+
+CREATE POLICY "Allow public CV uploads"
+  ON storage.objects
+  FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (bucket_id = 'cv-uploads');
+
+CREATE POLICY "Allow authenticated CV access"
+  ON storage.objects
+  FOR SELECT
+  TO authenticated
+  USING (bucket_id = 'cv-uploads');

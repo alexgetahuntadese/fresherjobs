@@ -111,11 +111,7 @@ export default async function HomePage() {
                       : 'Recently posted'}
                   </span>
 
-                  <a
-                    href={job.apply_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-2 text-sm font-semibold text-[#160d24] shadow-[0_8px_30px_rgba(167,139,250,0.25)] transition hover:brightness-110"
+                  <Link href={`/apply/${job.id}`} className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-2 text-sm font-semibold text-[#160d24] shadow-[0_8px_30px_rgba(167,139,250,0.25)] transition hover:brightness-110"
                   >
                     Apply
                   </a>
