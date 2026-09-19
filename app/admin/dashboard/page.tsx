@@ -247,12 +247,12 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 jobs.map((job) => (
                   <article
                     key={job.id}
-                    className="rounded-2xl border border-white/10 bg-[#0d0b16]/60 p-4"
+                    className="min-w-0 rounded-2xl border border-white/10 bg-[#0d0b16]/60 p-4"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">{job.title}</h3>
-                        <p className="mt-1 text-sm text-slate-400">
+                      <div className="min-w-0">
+                        <h3 className="break-words text-lg font-semibold text-white">{job.title}</h3>
+                        <p className="mt-1 break-words text-sm text-slate-400">
                           {job.company_name} • {job.location}
                         </p>
                       </div>
@@ -269,7 +269,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       </div>
                     </div>
 
-                    <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-300">{job.description}</p>
+                    <p className="mt-3 line-clamp-2 break-words text-sm leading-6 text-slate-300">{job.description}</p>
 
                     <details className="mt-4 rounded-2xl border border-violet-300/15 bg-violet-400/[0.04]">
                       <summary className="cursor-pointer select-none list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:bg-violet-400/10 hover:text-white"><span className="mr-2 text-violet-300">▾</span> Review and edit full job details</summary>
