@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 type JobRecord = Database['public']['Tables']['jobs']['Row'];
 
 export default async function HomePage() {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-16 text-slate-100">
         <section className="w-full max-w-xl rounded-3xl border border-amber-500/40 bg-slate-900/90 p-8 text-center shadow-soft">
