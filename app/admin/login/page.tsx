@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { SubmitButton } from '@/app/components/submit-button';
 import { signInAction } from './actions';
 
 type LoginPageProps = {
-  searchParams?: Promise<{ error?: string }>;
+  searchParams?: Promise<{ error?: string; registered?: string }>;
 };
 
 export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
@@ -14,6 +15,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
     resolvedSearchParams?.error === 'invalid_credentials'
       ? 'The email or password is incorrect. Please try again.'
       : null;
+  const registrationNotice = resolvedSearchParams?.registered === '1' ? 'Account created. Check your email if confirmation is required, then sign in.' : null;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#0d0b16] px-6 py-16">
@@ -25,6 +27,8 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
           </p>
           <h1 className="mt-3 font-serif text-3xl font-medium text-white">Sign in</h1>
         </div>
+
+        {registrationNotice ? <div aria-live="polite" className="mb-5 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-200">{registrationNotice}</div> : null}
 
         <form action={signInAction} className="space-y-5">
           {authError ? (
@@ -63,12 +67,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-3 font-semibold text-slate-950 transition hover:brightness-110"
-          >
-            Continue to dashboard
-          </button>
+          <SubmitButton pendingLabel="Signing in…">Continue to dashboard</SubmitButton>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-400">New job poster? <Link href={"/admin/register" as never} className="font-medium text-violet-200 transition hover:text-white">Create an account</Link></p>
@@ -76,6 +75,9 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
     </main>
   );
 }
+
+
+
 
 
 

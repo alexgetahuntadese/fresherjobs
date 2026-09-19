@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { SubmitButton } from '@/app/components/submit-button';
 import { registerEmployerAction } from './actions';
 
 type RegisterPageProps = { searchParams?: Promise<{ error?: string }> };
@@ -20,11 +21,14 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           <input name="company_name" required placeholder="Company name" className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" />
           <input name="email" type="email" required placeholder="Work email" className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" />
           <input name="password" type="password" minLength={6} required placeholder="Password (6+ characters)" className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" />
-          <button type="submit" className="w-full rounded-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-3 font-semibold text-slate-950 transition hover:brightness-110">Create poster account</button>
+          <SubmitButton pendingLabel="Creating account…">Create poster account</SubmitButton>
         </form>
         <p className="mt-6 text-center text-sm text-slate-400">Already registered? <Link href="/admin/login" className="text-violet-200 hover:text-white">Sign in</Link></p>
       </div>
     </main>
   );
 }
+
+
+
 
