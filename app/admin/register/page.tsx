@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { SubmitButton } from '@/app/components/submit-button';
 import { registerEmployerAction } from './actions';
 
-type RegisterPageProps = { searchParams?: Promise<{ error?: string }> };
+type RegisterPageProps = { searchParams?: Promise<{ error?: string; registered?: string }> };
 
 export default async function RegisterPage({ searchParams }: RegisterPageProps) {
   const params = await searchParams;
@@ -15,7 +15,8 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">job poster access</p>
           <h1 className="mt-3 font-serif text-3xl font-medium text-white">Create a poster account</h1>
         </div>
-        {params?.error ? <p className="mb-5 rounded-xl border border-fuchsia-400/40 bg-fuchsia-400/10 px-3 py-2 text-sm text-fuchsia-200">{params.error === 'missing_fields' ? 'Complete all fields. Passwords must be at least 6 characters.' : 'Unable to create the account. Please check your details.'}</p> : null}
+        {params?.registered === '1' ? <p aria-live="polite" className="mb-5 rounded-xl border border-emerald-400/40 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-200">Account created successfully. Check your email to confirm the account, then sign in.</p> : null}
+        {params?.error ? <p aria-live="polite" className="mb-5 rounded-xl border border-fuchsia-400/40 bg-fuchsia-400/10 px-3 py-2 text-sm text-fuchsia-200">{params.error === 'missing_fields' ? 'Complete all fields. Passwords must be at least 6 characters.' : params.error === 'profile_failed' ? 'Account created, but the poster profile could not be saved. Apply the latest supabase/schema.sql migration, then try again.' : 'Unable to create the account. The email may already be registered.'}</p> : null}
         <form action={registerEmployerAction} className="space-y-5">
           <input name="username" required placeholder="Username" className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" />
           <input name="company_name" required placeholder="Company name" className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none focus:border-violet-300" />
@@ -28,6 +29,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
     </main>
   );
 }
+
 
 
 

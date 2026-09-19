@@ -28,6 +28,7 @@ export async function registerEmployerAction(formData: FormData) {
     redirect('/admin/dashboard');
   }
 
-  redirect('/admin/login?registered=1');
+  redirect('/admin/register?registered=1' as never);
 }
+
 
