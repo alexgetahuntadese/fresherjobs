@@ -24,9 +24,8 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
-          employer_id: string | null;
-          sector?: string;
           employer_id?: string | null;
+          sector?: string;
           description: string;
           apply_url: string;
           is_featured?: boolean;
@@ -40,8 +39,8 @@ export type Database = {
           company_name?: string;
           location?: string;
           job_type?: string;
-          sector?: string;
           employer_id?: string | null;
+          sector?: string;
           description?: string;
           apply_url?: string;
           is_featured?: boolean;
@@ -50,33 +49,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      employees: {
-        Row: {
-          [key: string]: unknown;
-          user_id: string;
-          username: string;
-          full_name: string;
-          active: boolean;
-          created_at: string;
-        };
-        Insert: {
-          [key: string]: unknown;
-          user_id: string;
-          username: string;
-          full_name: string;
-          active?: boolean;
-          created_at?: string;
-        };
-        Update: {
-          [key: string]: unknown;
-          user_id?: string;
-          username?: string;
-          full_name?: string;
-          active?: boolean;
-          created_at?: string;
-        };
-        Relationships: [];
-      };employers: {
+      employers: {
         Row: {
           [key: string]: unknown;
           user_id: string;
@@ -102,7 +75,8 @@ export type Database = {
           created_at?: string;
         };
         Relationships: [];
-      };      applications: {
+      };
+      applications: {
         Row: {
           [key: string]: unknown;
           id: string;
@@ -126,7 +100,6 @@ export type Database = {
           created_at?: string;
         };
         Update: {
-          [key: string]: unknown;
           id?: string;
           job_id?: string;
           full_name?: string;
