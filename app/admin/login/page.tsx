@@ -70,8 +70,6 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
 
           <SubmitButton pendingLabel="Signing in…">Continue to dashboard</SubmitButton>
         </form>
-
-        <p className="mt-6 text-center text-sm text-slate-400">New job poster? <Link href="/admin/register" className="font-medium text-violet-200 transition hover:text-white">Create an account</Link></p>
       </div>
     </main>
   );
