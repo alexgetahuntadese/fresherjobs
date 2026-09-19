@@ -9,7 +9,13 @@ export const dynamic = 'force-dynamic';
 
 type JobRecord = Database['public']['Tables']['jobs']['Row'];
 
-export default async function HomePage() {
+const jobCategories = ['Full-time', 'Part-time', 'Contract', 'Internship'] as const;
+
+type HomePageProps = {
+  searchParams?: Promise<{ q?: string; category?: string }>;
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-16 text-slate-100">
@@ -24,12 +30,28 @@ export default async function HomePage() {
     );
   }
 
+  const filters = await searchParams;
+  const search = filters?.q?.trim() ?? '';
+  const category = jobCategories.includes(filters?.category as (typeof jobCategories)[number])
+    ? filters?.category
+    : '';
+  const safeSearch = search.replace(/[,%()]/g, ' ');
+
   const supabase = await createClient();
-  const { data: jobs, error } = await supabase
+  let jobsQuery = supabase
     .from('jobs')
     .select('*')
-    .not('published_at', 'is', null)
-    .order('published_at', { ascending: false });
+    .not('published_at', 'is', null);
+
+  if (category) {
+    jobsQuery = jobsQuery.eq('job_type', category);
+  }
+
+  if (safeSearch) {
+    jobsQuery = jobsQuery.or(`title.ilike.%${safeSearch}%,company_name.ilike.%${safeSearch}%,location.ilike.%${safeSearch}%`);
+  }
+
+  const { data: jobs, error } = await jobsQuery.order('published_at', { ascending: false });
 
   if (error) {
     console.error('Unable to fetch published jobs.', error);
@@ -38,7 +60,7 @@ export default async function HomePage() {
   const publishedJobs: JobRecord[] = jobs ?? [];
 
   return (
-    <main className="relative min-h-screen overflow-hidden text-slate-100">
+    <main className="relative min-h-screen overflow-hidden text-slate-100">`r`n      <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-96 w-96 rounded-full bg-violet-600/20 blur-3xl" />`r`n      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-[28rem] h-[32rem] w-[32rem] rounded-full bg-fuchsia-500/10 blur-3xl" />
       <div className="relative mx-auto max-w-6xl px-6 py-16 sm:px-8 lg:px-12">
         <header className="glass-panel mb-12 flex flex-col gap-6 rounded-[2rem] p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
           <div>
@@ -46,18 +68,47 @@ export default async function HomePage() {
               curated opportunities
             </p>
             <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-white sm:text-6xl">
-              Fresh roles for ambitious talent
+              Fresh roles for <span className="text-gradient">ambitious talent</span>
             </h1>
           </div>
-
-          <Link
-            href="/admin/login"
-            className="inline-flex items-center justify-center rounded-full border border-violet-300/30 bg-violet-400/10 px-5 py-2.5 text-sm font-medium text-violet-100 transition hover:border-violet-200 hover:bg-violet-400/20"
-          >
-            Admin Login
-          </Link>
         </header>
 
+        <form method="get" className="glass-panel mb-8 grid gap-3 rounded-[2rem] p-4 sm:grid-cols-[1fr_220px_auto] sm:p-5">
+          <label className="sr-only" htmlFor="job-search">Search jobs</label>
+          <input
+            id="job-search"
+            name="q"
+            type="search"
+            defaultValue={search}
+            placeholder="Search title, company, or location"
+            className="rounded-xl border border-white/10 bg-[#0d0b16] px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-violet-300"
+          />
+          <label className="sr-only" htmlFor="job-category">Filter by category</label>
+          <select
+            id="job-category"
+            name="category"
+            defaultValue={category}
+            className="rounded-xl border border-white/10 bg-[#0d0b16] px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-violet-300"
+          >
+            <option value="">All categories</option>
+            {jobCategories.map((option) => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="rounded-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 px-5 py-3 text-sm font-semibold text-[#160d24] transition hover:brightness-110"
+          >
+            Search jobs
+          </button>
+        </form>
+
+        {(search || category) ? (
+          <div className="mb-6 flex items-center justify-between gap-4 text-sm text-slate-400">
+            <p>Showing {publishedJobs.length} matching {publishedJobs.length === 1 ? 'role' : 'roles'}.</p>
+            <Link href="/" className="text-violet-200 transition hover:text-white">Clear filters</Link>
+          </div>
+        ) : null}
         {publishedJobs.length === 0 ? (
           <section className="glass-panel gradient-border rounded-[2rem] p-10 text-center shadow-soft">
             <p className="text-lg text-slate-200">No jobs are live right now.</p>
@@ -70,7 +121,7 @@ export default async function HomePage() {
             {publishedJobs.map((job) => (
               <article
                 key={job.id}
-                className="glass-panel gradient-border rounded-[2rem] p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-violet-300/40"
+                className="glass-panel gradient-border group relative overflow-hidden rounded-[2rem] p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-violet-300/40 hover:shadow-[0_24px_70px_rgba(124,58,237,0.2)]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -81,7 +132,7 @@ export default async function HomePage() {
                   </div>
 
                   {job.is_featured ? (
-                    <span className="rounded-full border border-amber-400/40 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-200">
+                    <span className="rounded-full border border-fuchsia-300/30 bg-fuchsia-400/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-fuchsia-200">
                       Featured
                     </span>
                   ) : null}
@@ -94,7 +145,7 @@ export default async function HomePage() {
                   </span>
                 </div>
 
-                <p className="mt-5 text-sm leading-7 text-slate-300">
+                <p className="mt-5 text-sm leading-7 text-slate-300 transition-colors group-hover:text-slate-200">
                   {job.description.length > 180
                     ? `${job.description.slice(0, 180).trimEnd()}…`
                     : job.description}
@@ -114,7 +165,7 @@ export default async function HomePage() {
                   <Link href={`/apply/${job.id}`} className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-2 text-sm font-semibold text-[#160d24] shadow-[0_8px_30px_rgba(167,139,250,0.25)] transition hover:brightness-110"
                   >
                     Apply
-                  </a>
+                  </Link>
                 </div>
               </article>
             ))}

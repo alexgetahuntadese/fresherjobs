@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
 import { createClient } from '@/lib/supabase/server';
+import { SubmitButton } from '@/app/components/submit-button';
 
 import { createJobAction, deleteJobAction } from './actions';
 
@@ -38,7 +39,9 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         ? 'Please provide a valid HTTP or HTTPS application URL.'
         : resolvedSearchParams?.error === 'missing_id'
           ? 'A job ID was not provided and the record could not be deleted.'
-          : null;
+          : resolvedSearchParams?.error === 'duplicate_job'
+            ? 'A matching job already exists for this company and location.'
+            : null;
 
   return (
     <main className="min-h-screen bg-[#0d0b16] px-6 py-10 text-slate-100">
@@ -165,12 +168,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 Mark as featured listing
               </label>
 
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-3 font-semibold text-slate-950 transition hover:brightness-110"
-              >
-                Publish job
-              </button>
+              <SubmitButton pendingLabel="Publishing…">Publish job</SubmitButton>
             </form>
           </div>
 

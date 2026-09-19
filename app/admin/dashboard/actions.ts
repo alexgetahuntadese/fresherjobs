@@ -37,6 +37,17 @@ export async function createJobAction(formData: FormData) {
     redirect('/admin/dashboard?error=invalid_url');
   }
 
+  const { data: duplicateJob } = await supabase
+    .from('jobs')
+    .select('id')
+    .ilike('title', title)
+    .ilike('company_name', companyName)
+    .ilike('location', location)
+    .maybeSingle();
+
+  if (duplicateJob) {
+    redirect('/admin/dashboard?error=duplicate_job');
+  }
   const { error } = await supabase.from('jobs').insert({
     title,
     company_name: companyName,
@@ -47,6 +58,10 @@ export async function createJobAction(formData: FormData) {
     is_featured: isFeatured,
     published_at: new Date().toISOString(),
   });
+
+  if (error?.code === '23505') {
+    redirect('/admin/dashboard?error=duplicate_job');
+  }
 
   if (error) {
     throw new Error(`Unable to create new job: ${error.message}`);
