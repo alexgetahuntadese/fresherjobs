@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/server';
+import { JOB_SECTORS } from '@/lib/job-sectors';
 
 // Creates a new public job posting and refreshes the route cache for the board.
 export async function createJobAction(formData: FormData) {
@@ -20,11 +21,12 @@ export async function createJobAction(formData: FormData) {
   const companyName = String(formData.get('company_name') ?? '').trim();
   const location = String(formData.get('location') ?? '').trim();
   const jobType = String(formData.get('job_type') ?? '').trim();
+  const sector = String(formData.get('sector') ?? '').trim();
   const applyUrl = String(formData.get('apply_url') ?? '').trim();
   const description = String(formData.get('description') ?? '').trim();
   const isFeatured = formData.get('is_featured') === 'on';
 
-  if (!title || !companyName || !location || !jobType || !applyUrl || !description) {
+  if (!title || !companyName || !location || !jobType || !sector || !applyUrl || !description) {
     redirect('/admin/dashboard?error=missing_fields');
   }
 
@@ -53,6 +55,7 @@ export async function createJobAction(formData: FormData) {
     company_name: companyName,
     location,
     job_type: jobType,
+    sector,
     apply_url: applyUrl,
     description,
     is_featured: isFeatured,

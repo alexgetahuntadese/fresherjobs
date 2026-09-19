@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { createClient } from '@/lib/supabase/server';
 import { SubmitButton } from '@/app/components/submit-button';
+import { JOB_SECTORS } from '@/lib/job-sectors';
 
 import { createJobAction, deleteJobAction } from './actions';
 
@@ -39,7 +41,9 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         ? 'Please provide a valid HTTP or HTTPS application URL.'
         : resolvedSearchParams?.error === 'missing_id'
           ? 'A job ID was not provided and the record could not be deleted.'
-          : resolvedSearchParams?.error === 'duplicate_job'
+          : resolvedSearchParams?.error === 'invalid_sector'
+            ? 'Please select a valid job sector.'
+            : resolvedSearchParams?.error === 'duplicate_job'
             ? 'A matching job already exists for this company and location.'
             : null;
 
@@ -48,6 +52,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="flex flex-col gap-4 rounded-3xl border border-white/10 glass-panel p-6 shadow-soft sm:flex-row sm:items-center sm:justify-between">
           <div>
+            <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="mb-4 h-14 w-auto rounded-xl object-contain" />
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
               dashboard
             </p>
@@ -135,6 +140,22 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <label htmlFor="sector" className="text-sm font-medium text-slate-200">
+                  Job sector
+                </label>
+                <select
+                  id="sector"
+                  name="sector"
+                  required
+                  defaultValue="Other"
+                  className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition focus:border-violet-300"
+                >
+                  {JOB_SECTORS.map((sector) => (
+                    <option key={sector} value={sector}>{sector}</option>
+                  ))}
+                </select>
+              </div>
               <div className="space-y-2">
                 <label htmlFor="apply_url" className="text-sm font-medium text-slate-200">
                   Apply URL

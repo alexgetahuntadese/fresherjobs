@@ -1,6 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { createClient } from '@/lib/supabase/server';
+import { JOB_SECTORS } from '@/lib/job-sectors';
 import type { Database } from '@/types/database';
 
 // Public job board. Rebuilds every 60 seconds to keep the board fresh without full static rebuilds.
@@ -8,8 +10,6 @@ export const revalidate = 60;
 export const dynamic = 'force-dynamic';
 
 type JobRecord = Database['public']['Tables']['jobs']['Row'];
-
-const jobCategories = ['Full-time', 'Part-time', 'Contract', 'Internship'] as const;
 
 type HomePageProps = {
   searchParams?: Promise<{ q?: string; category?: string }>;
@@ -32,7 +32,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const filters = await searchParams;
   const search = filters?.q?.trim() ?? '';
-  const category = jobCategories.includes(filters?.category as (typeof jobCategories)[number])
+  const category = JOB_SECTORS.includes(filters?.category as (typeof JOB_SECTORS)[number])
     ? filters?.category
     : '';
   const safeSearch = search.replace(/[,%()]/g, ' ');
@@ -44,7 +44,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     .not('published_at', 'is', null);
 
   if (category) {
-    jobsQuery = jobsQuery.eq('job_type', category);
+    jobsQuery = jobsQuery.eq('sector', category);
   }
 
   if (safeSearch) {
@@ -60,10 +60,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const publishedJobs: JobRecord[] = jobs ?? [];
 
   return (
-    <main className="relative min-h-screen overflow-hidden text-slate-100">`r`n      <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-96 w-96 rounded-full bg-violet-600/20 blur-3xl" />`r`n      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-[28rem] h-[32rem] w-[32rem] rounded-full bg-fuchsia-500/10 blur-3xl" />
+    <main className="relative min-h-screen overflow-hidden text-slate-100">
+      <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-24 h-96 w-96 rounded-full bg-violet-600/20 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-[28rem] h-[32rem] w-[32rem] rounded-full bg-fuchsia-500/10 blur-3xl" />
       <div className="relative mx-auto max-w-6xl px-6 py-16 sm:px-8 lg:px-12">
         <header className="glass-panel mb-12 flex flex-col gap-6 rounded-[2rem] p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
           <div>
+            <Link href="/" className="mb-6 inline-flex items-center gap-3" aria-label="FresherJobs home">
+              <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-16 w-auto rounded-xl object-contain" />
+            </Link>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
               curated opportunities
             </p>
@@ -83,15 +88,15 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             placeholder="Search title, company, or location"
             className="rounded-xl border border-white/10 bg-[#0d0b16] px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-violet-300"
           />
-          <label className="sr-only" htmlFor="job-category">Filter by category</label>
+          <label className="sr-only" htmlFor="job-category">Filter by sector</label>
           <select
             id="job-category"
             name="category"
             defaultValue={category}
             className="rounded-xl border border-white/10 bg-[#0d0b16] px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-violet-300"
           >
-            <option value="">All categories</option>
-            {jobCategories.map((option) => (
+            <option value="">All sectors</option>
+            {JOB_SECTORS.map((option) => (
               <option key={option} value={option}>{option}</option>
             ))}
           </select>

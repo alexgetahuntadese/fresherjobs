@@ -9,6 +9,7 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
+          sector: string;
           description: string;
           apply_url: string;
           is_featured: boolean;
@@ -22,6 +23,7 @@ export type Database = {
           company_name: string;
           location: string;
           job_type: string;
+          sector?: string;
           description: string;
           apply_url: string;
           is_featured?: boolean;
@@ -35,6 +37,7 @@ export type Database = {
           company_name?: string;
           location?: string;
           job_type?: string;
+          sector?: string;
           description?: string;
           apply_url?: string;
           is_featured?: boolean;

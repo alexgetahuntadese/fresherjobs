@@ -7,12 +7,16 @@ CREATE TABLE IF NOT EXISTS public.jobs (
   company_name TEXT NOT NULL,
   location TEXT NOT NULL,
   job_type TEXT NOT NULL,
+  sector TEXT NOT NULL DEFAULT 'Other',
   description TEXT NOT NULL,
   apply_url TEXT NOT NULL,
   is_featured BOOLEAN NOT NULL DEFAULT FALSE,
   published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Backfill the sector column for databases created before sector filtering was introduced.
+ALTER TABLE public.jobs ADD COLUMN IF NOT EXISTS sector TEXT NOT NULL DEFAULT 'Other';
 
 -- Ensure all rows are readable by everyone on the public job board.
 ALTER TABLE public.jobs ENABLE ROW LEVEL SECURITY;
