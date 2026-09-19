@@ -38,6 +38,13 @@ END $$;
 ALTER TABLE public.employers ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Employers can view their own profile" ON public.employers;
+DROP POLICY IF EXISTS "Employers can create their own profile" ON public.employers;
+CREATE POLICY "Employers can create their own profile"
+  ON public.employers
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (user_id = auth.uid());
+
 CREATE POLICY "Employers can view their own profile"
   ON public.employers
   FOR SELECT
@@ -167,3 +174,4 @@ CREATE POLICY "Allow authenticated CV access"
       )
     )
   );
+
