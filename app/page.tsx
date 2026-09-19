@@ -70,11 +70,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <Link href="/" className="inline-flex items-center gap-3" aria-label="FresherJobs home">
                 <Image src="/fresherjobs-logo.jpg" alt="FresherJobs" width={352} height={192} priority className="h-16 w-auto max-w-[230px] rounded-2xl bg-white p-2 shadow-[0_12px_40px_rgba(167,139,250,0.22)] object-contain" />
               </Link>
-              <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-slate-300">
-                <Link href="/" className="text-white transition hover:text-violet-200">Home</Link>
-                <Link href="/#jobs" className="transition hover:text-white">New jobs</Link>
-                <Link href="/admin/login" className="transition hover:text-white">Post a job</Link>
-                <Link href="/admin/login" className="rounded-full border border-violet-300/30 bg-violet-400/10 px-4 py-2 text-violet-100 transition hover:border-violet-200/60 hover:bg-violet-400/20">Premium</Link>
+              <nav aria-label="Main navigation" className="flex w-full flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-[#0d0b16]/80 p-2 text-base font-semibold text-slate-200 shadow-[0_12px_36px_rgba(0,0,0,0.25)] sm:w-auto">
+                <Link href="/" className="rounded-xl bg-white/[0.08] px-4 py-2.5 text-white transition hover:bg-white/[0.14] hover:text-violet-200">Home</Link>
+                <Link href="/#jobs" className="rounded-xl px-4 py-2.5 transition hover:bg-white/[0.08] hover:text-white">New jobs</Link>
+                <Link href="/admin/login" className="rounded-xl px-4 py-2.5 transition hover:bg-white/[0.08] hover:text-white">Post a job</Link>
+                <Link href="/admin/login" className="rounded-xl border border-violet-300/40 bg-violet-400/15 px-4 py-2.5 text-violet-100 transition hover:border-violet-200/70 hover:bg-violet-400/25">Premium</Link>
               </nav>
             </div>
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
@@ -190,3 +190,4 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     </main>
   );
 }
+
