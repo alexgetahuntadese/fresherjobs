@@ -56,6 +56,17 @@ ALTER TABLE public.jobs ADD COLUMN IF NOT EXISTS sector TEXT NOT NULL DEFAULT 'O
 -- Ensure all rows are readable by everyone on the public job board.
 ALTER TABLE public.jobs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow public job submissions" ON public.jobs;
+CREATE POLICY "Allow public job submissions"
+  ON public.jobs
+  FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (
+    published_at IS NULL
+    AND employer_id IS NULL
+    AND is_featured = FALSE
+  );
+
 -- Make this script safe to re-run during local setup or deployment.
 DROP POLICY IF EXISTS "Allow public read access" ON public.jobs;
 DROP POLICY IF EXISTS "Allow authenticated write access" ON public.jobs;

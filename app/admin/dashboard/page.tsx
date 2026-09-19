@@ -244,9 +244,16 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                         </p>
                       </div>
 
-                      <span className="rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400/10 px-2.5 py-1 text-xs font-medium text-violet-100">
-                        {job.job_type}
-                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        <span className="rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400/10 px-2.5 py-1 text-xs font-medium text-violet-100">
+                          {job.job_type}
+                        </span>
+                        {job.published_at ? (
+                          <span className="rounded-full bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-200">Published</span>
+                        ) : (
+                          <span className="rounded-full bg-amber-400/10 px-2.5 py-1 text-xs font-medium text-amber-200">Pending review</span>
+                        )}
+                      </div>
                     </div>
 
                     <p className="mt-3 line-clamp-3 text-sm text-slate-300">{job.description}</p>
