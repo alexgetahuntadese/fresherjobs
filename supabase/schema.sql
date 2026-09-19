@@ -26,7 +26,7 @@ DROP POLICY IF EXISTS "Allow authenticated delete access" ON public.jobs;
 CREATE POLICY "Allow public read access"
   ON public.jobs
   FOR SELECT
-  USING (true);
+  USING (published_at IS NOT NULL OR auth.role() = 'authenticated');
 
 CREATE POLICY "Allow authenticated write access"
   ON public.jobs
