@@ -13,18 +13,18 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
       : null;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-16">
-      <div className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 p-8 shadow-soft">
+    <main className="flex min-h-screen items-center justify-center bg-[#0d0b16] px-6 py-16">
+      <div className="w-full max-w-md rounded-3xl border border-white/10 glass-panel p-8 shadow-soft">
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-300">
             admin access
           </p>
-          <h1 className="mt-3 text-3xl font-bold text-white">Sign in</h1>
+          <h1 className="mt-3 font-serif text-3xl font-medium text-white">Sign in</h1>
         </div>
 
         <form action={signInAction} className="space-y-5">
           {authError ? (
-            <div className="rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+            <div className="rounded-xl border border-fuchsia-400/40 bg-fuchsia-400/10 px-3 py-2 text-sm text-fuchsia-200">
               {authError}
             </div>
           ) : null}
@@ -39,7 +39,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
               type="email"
               autoComplete="email"
               required
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-slate-100 outline-none ring-0 transition placeholder:text-slate-500 focus:border-sky-500"
+              className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none ring-0 transition placeholder:text-slate-500 focus:border-violet-300"
               placeholder="admin@company.com"
             />
           </div>
@@ -54,14 +54,14 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
               type="password"
               autoComplete="current-password"
               required
-              className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-sky-500"
+              className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-2.5 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-violet-300"
               placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-sky-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-sky-400"
+            className="w-full rounded-xl bg-gradient-to-r from-violet-400 to-fuchsia-400 px-4 py-3 font-semibold text-slate-950 transition hover:brightness-110"
           >
             Continue to dashboard
           </button>

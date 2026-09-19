@@ -4,6 +4,10 @@
 
 :root {
   color-scheme: dark;
+  --ink: #0d0b16;
+  --violet: #8b5cf6;
+  --violet-bright: #a78bfa;
+  --magenta: #e879f9;
 }
 
 html {
@@ -11,8 +15,14 @@ html {
 }
 
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
-  font-family: Arial, Helvetica, sans-serif;
+  @apply antialiased;
+  min-height: 100vh;
+  color: #f5f3ff;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 8% 8%, rgba(124, 58, 237, 0.22), transparent 30rem),
+    radial-gradient(circle at 92% 12%, rgba(217, 70, 239, 0.13), transparent 28rem),
+    #0d0b16;
 }
 
 * {
@@ -27,5 +37,38 @@ button {
 }
 
 ::selection {
-  background: rgba(56, 189, 248, 0.35);
+  background: rgba(167, 139, 250, 0.35);
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-white/10 bg-white/[0.045] backdrop-blur-xl;
+    box-shadow: 0 24px 80px rgba(3, 1, 12, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .gradient-border {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.7), rgba(232, 121, 249, 0.18), rgba(255, 255, 255, 0.08));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .text-gradient {
+    background: linear-gradient(110deg, #c4b5fd, #f0abfc 75%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
