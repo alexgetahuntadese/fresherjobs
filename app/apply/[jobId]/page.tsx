@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -10,6 +11,22 @@ type ApplyPageProps = {
   params: Promise<{ jobId: string }>;
   searchParams?: Promise<{ error?: string; success?: string }>;
 };
+
+export async function generateMetadata({ params }: ApplyPageProps): Promise<Metadata> {
+  const { jobId } = await params;
+  const supabase = await createClient();
+  const { data: job } = await supabase
+    .from('jobs')
+    .select('title, company_name')
+    .eq('id', jobId)
+    .not('published_at', 'is', null)
+    .maybeSingle();
+
+  return {
+    title: job ? 'Apply for ' + job.title + ' | FresherJobs' : 'Apply | FresherJobs',
+    description: job ? 'Apply for ' + job.title + ' at ' + job.company_name + '.' : 'Apply for a role on FresherJobs.',
+  };
+}
 
 export default async function ApplyPage({ params, searchParams }: ApplyPageProps) {
   const { jobId } = await params;
@@ -48,7 +65,7 @@ export default async function ApplyPage({ params, searchParams }: ApplyPageProps
   return (
     <main className="min-h-screen px-6 py-12 text-slate-100 sm:py-20">
       <div className="mx-auto max-w-3xl">
-        <Link href="/" className="text-sm text-violet-200/70 transition hover:text-violet-100">
+        <Link href="/" className="on-purple text-sm transition hover:text-violet-100">
           ← Back to opportunities
         </Link>
 
