@@ -42,6 +42,9 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
     .eq('active', true)
     .order('company_name');
 
+  const { data: applications } = await supabase.from('applications').select('id, job_id, full_name, email, phone, cv_url, cv_path, created_at').order('created_at',{ascending:false});
+  const applicationRows=await Promise.all((applications??[]).map(async(a)=>{let cvLink=a.cv_url;if(!cvLink&&a.cv_path){const {data}=await supabase.storage.from('cv-uploads').createSignedUrl(a.cv_path,3600);cvLink=data?.signedUrl??null;}return {...a,cvLink};}));
+
   const errorMessage =
     resolvedSearchParams?.error === 'missing_fields'
       ? 'Please complete every required field before publishing a job.'
@@ -239,9 +242,11 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
           <div className="rounded-3xl border border-white/10 glass-panel p-6 shadow-soft">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-white">Current listings</h2>
-              <span className="rounded-full border border-white/10 bg-[#0d0b16] px-2.5 py-1 text-xs text-slate-300">
+              <div className="flex flex-wrap items-center gap-2"><span className="rounded-full border border-white/10 bg-[#0d0b16] px-2.5 py-1 text-xs text-slate-300">
                 {jobs?.length ?? 0} jobs
               </span>
+                <span className="rounded-full border border-violet-300/20 bg-violet-400/10 px-2.5 py-1 text-xs font-semibold text-violet-700">{applicationRows.length} applications</span>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -273,6 +278,30 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
 
                     <p className="mt-3 line-clamp-2 break-all text-sm leading-6 text-slate-300">{job.description}</p>
 
+                    <details className="mt-4 rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
+                      <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-violet-800 transition hover:bg-violet-400/10">
+                        <span>View applications</span>
+                        <span className="rounded-full bg-violet-600 px-2.5 py-1 text-xs font-bold text-white">{applicationRows.filter((application) => application.job_id === job.id).length}</span>
+                      </summary>
+                      <div className="space-y-3 border-t border-violet-300/20 p-4">
+                        {applicationRows.filter((application) => application.job_id === job.id).length ? applicationRows.filter((application) => application.job_id === job.id).map((application) => (
+                          <article key={application.id} className="rounded-2xl border border-violet-200/70 bg-white/80 p-4 shadow-sm">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                              <div className="min-w-0">
+                                <h4 className="break-words text-base font-bold text-violet-950">{application.full_name}</h4>
+                                <p className="mt-2 break-all text-sm font-medium text-violet-800">{application.email}</p>
+                                <p className="mt-1 break-all text-sm text-violet-700">{application.phone}</p>
+                              </div>
+                              <time dateTime={application.created_at} className="shrink-0 text-xs font-semibold text-violet-600">{new Date(application.created_at).toLocaleDateString()}</time>
+                            </div>
+                            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-violet-100 pt-3">
+                              {application.cvLink ? <a href={application.cvLink} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-violet-700 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-violet-800">View CV</a> : <span className="text-xs font-medium text-violet-500">No CV link available</span>}
+                              <span className="text-xs text-violet-500">Application received</span>
+                            </div>
+                          </article>
+                        )) : <p className="rounded-xl border border-dashed border-violet-200 bg-white/60 p-4 text-sm text-violet-700">No applications have been submitted for this role yet.</p>}
+                      </div>
+                    </details>
                     <details className="mt-4 rounded-2xl border border-violet-300/15 bg-violet-400/[0.04]">
                       <summary className="cursor-pointer select-none break-words list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:bg-violet-400/10 hover:text-white"><span className="mr-2 text-violet-300">▾</span> Review and edit full job details</summary>
                       <form action={updateJobAction} className="space-y-4 border-t border-white/10 p-4">
