@@ -159,7 +159,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   </span>
                 </div>
 
-                <p className="mt-5 text-sm leading-7 text-slate-300 transition-colors group-hover:text-slate-200">
+                <p className="mt-5 text-sm font-extrabold leading-7 text-slate-100 transition-colors group-hover:text-white">
                   {job.description.length > 180
                     ? `${job.description.slice(0, 180).trimEnd()}…`
                     : job.description}
@@ -169,7 +169,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-violet-200 transition hover:text-white">
                       Read full job description <span className="ml-1 text-violet-300">⌄</span>
                     </summary>
-                    <div className="border-t border-white/10 px-4 py-4 text-sm leading-7 whitespace-pre-line text-slate-300">
+                    <div className="border-t border-white/10 px-4 py-4 text-sm font-extrabold leading-7 whitespace-pre-line text-slate-100">
                       {job.description}
                     </div>
                   </details>}
