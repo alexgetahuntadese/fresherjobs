@@ -139,7 +139,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-800">
+                    <p className="text-sm font-bold uppercase tracking-[0.16em] text-violet-800">
                       {job.company_name}
                     </p>
                     <h2 className="mt-3 font-serif text-2xl font-medium text-white">{job.title}</h2>
