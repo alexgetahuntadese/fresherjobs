@@ -295,11 +295,14 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                               <time dateTime={application.created_at} className="shrink-0 text-xs font-semibold text-violet-600">{new Date(application.created_at).toLocaleDateString()}</time>
                             </div>
                             {application.cover_letter ? <div className="mt-4 rounded-xl border border-violet-100 bg-violet-50/70 p-3"><p className="text-xs font-bold uppercase tracking-wide text-violet-600">Cover letter</p><p className="mt-2 whitespace-pre-line break-words text-sm leading-6 text-violet-950">{application.cover_letter}</p></div> : null}
-                            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-violet-100 pt-3">
-                              {application.cvLink ? <a href={application.cvLink} target="_blank" rel="noreferrer" className="inline-flex rounded-full bg-violet-700 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-violet-800">View CV</a> : <span className="text-xs font-medium text-violet-500">No CV link available</span>} {application.coverLetterLink ? <a href={application.coverLetterLink} target="_blank" rel="noreferrer" className="inline-flex rounded-full border border-violet-300 px-3 py-1.5 text-xs font-bold text-violet-800 transition hover:bg-violet-100">View cover letter</a> : null}
-                              <span className="text-xs text-violet-500">Application received</span>
-                            </div>
-                          </article>
+                            <div className="mt-4 rounded-xl border border-violet-100 bg-violet-50/60 p-3" aria-label="Application documents">
+                              <p className="text-xs font-bold uppercase tracking-wide text-violet-600">Application documents</p>
+                              <div className="mt-2 flex flex-wrap items-center gap-2">
+                                {application.cvLink ? <a href={application.cvLink} target="_blank" rel="noreferrer" aria-label="View applicant CV" className="inline-flex rounded-full bg-violet-700 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-violet-800">View CV</a> : <span className="text-xs font-medium text-violet-500">No CV available</span>}
+                                {application.coverLetterLink ? <a href={application.coverLetterLink} target="_blank" rel="noreferrer" aria-label="View cover letter attachment" className="inline-flex rounded-full border border-violet-300 px-3 py-1.5 text-xs font-bold text-violet-800 transition hover:bg-violet-100">View cover letter attachment</a> : null}
+                                <span className="text-xs text-violet-500">Application received</span>
+                              </div>
+                            </div>                         </article>
                         )) : <p className="rounded-xl border border-dashed border-violet-200 bg-white/60 p-4 text-sm text-violet-700">No applications have been submitted for this role yet.</p>}
                       </div>
                     </details>
