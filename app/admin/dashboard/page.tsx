@@ -276,7 +276,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       </div>
                     </div>
 
-                    <p className="mt-3 line-clamp-2 break-all text-sm font-semibold leading-6 text-slate-200">{job.description}</p>
+                    <p className="mt-3 line-clamp-2 break-all text-sm font-extrabold leading-6 text-slate-100">{job.description}</p>
 
                     <details className="mt-4 rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
                       <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-violet-800 transition hover:bg-violet-400/10">
