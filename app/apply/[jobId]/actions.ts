@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/server';
 
-const allowedCvTypes = new Set([
+const allowedDocumentTypes = new Set([
   'application/pdf',
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -17,8 +17,11 @@ export async function submitApplicationAction(formData: FormData) {
   const email = String(formData.get('email') ?? '').trim().toLowerCase();
   const phone = String(formData.get('phone') ?? '').trim();
   const cvUrl = String(formData.get('cv_url') ?? '').trim();
+  const coverLetter = String(formData.get('cover_letter') ?? '').trim();
   const fileValue = formData.get('cv_file');
   const cvFile = typeof File !== 'undefined' && fileValue instanceof File && fileValue.size > 0 ? fileValue : null;
+  const coverLetterValue = formData.get('cover_letter_file');
+  const coverLetterFile = typeof File !== 'undefined' && coverLetterValue instanceof File && coverLetterValue.size > 0 ? coverLetterValue : null;
 
   if (!jobId || !fullName || !email || !phone || (!cvUrl && !cvFile)) {
     redirect(`/apply/${jobId}?error=missing_fields`);
@@ -39,8 +42,12 @@ export async function submitApplicationAction(formData: FormData) {
     }
   }
 
-  if (cvFile && (!allowedCvTypes.has(cvFile.type) || cvFile.size > 3 * 1024 * 1024)) {
+  if (cvFile && (!allowedDocumentTypes.has(cvFile.type) || cvFile.size > 3 * 1024 * 1024)) {
     redirect(`/apply/${jobId}?error=invalid_cv_file`);
+  }
+
+  if (coverLetterFile && (!allowedDocumentTypes.has(coverLetterFile.type) || coverLetterFile.size > 3 * 1024 * 1024)) {
+    redirect(('/apply/' + jobId + '?error=invalid_cover_letter_file') as never);
   }
 
   let supabase;
@@ -51,6 +58,7 @@ export async function submitApplicationAction(formData: FormData) {
   }
 
   let cvPath: string | null = null;
+  let coverLetterPath: string | null = null;
   if (cvFile) {
     const extension = cvFile.name.split('.').pop()?.toLowerCase() || 'pdf';
     cvPath = `${jobId}/${randomUUID()}.${extension}`;
@@ -70,6 +78,19 @@ export async function submitApplicationAction(formData: FormData) {
     }
   }
 
+  if (coverLetterFile) {
+    const extension = coverLetterFile.name.split('.').pop()?.toLowerCase() || 'pdf';
+    coverLetterPath = jobId + '/cover-letter-' + randomUUID() + '.' + extension;
+    let uploadError: { message: string } | null = null;
+    try {
+      const result = await supabase.storage.from('cv-uploads').upload(coverLetterPath, coverLetterFile, { contentType: coverLetterFile.type, upsert: false });
+      uploadError = result.error;
+    } catch {
+      uploadError = { message: 'Cover letter upload failed' };
+    }
+    if (uploadError) redirect(('/apply/' + jobId + '?error=upload_failed') as never);
+  }
+
   let applicationError: { code?: string; message: string } | null = null;
   try {
     const result = await supabase.from('applications').insert({
@@ -79,6 +100,8 @@ export async function submitApplicationAction(formData: FormData) {
       phone,
       cv_url: cvUrl || null,
       cv_path: cvPath,
+      cover_letter: coverLetter || null,
+      cover_letter_path: coverLetterPath,
     });
     applicationError = result.error;
   } catch {

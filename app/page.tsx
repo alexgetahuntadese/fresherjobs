@@ -35,29 +35,29 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const category = JOB_SECTORS.includes(filters?.category as (typeof JOB_SECTORS)[number])
     ? filters?.category
     : '';
-  const safeSearch = search.replace(/[,%()]/g, ' ');
+  const normalizedSearch = search.toLocaleLowerCase();
 
   const supabase = await createClient();
-  let jobsQuery = supabase
+  const { data: jobs, error } = await supabase
     .from('jobs')
     .select('*')
-    .not('published_at', 'is', null);
-
-  if (category) {
-    jobsQuery = jobsQuery.eq('sector', category);
-  }
-
-  if (safeSearch) {
-    jobsQuery = jobsQuery.or(`title.ilike.%${safeSearch}%,company_name.ilike.%${safeSearch}%,location.ilike.%${safeSearch}%`);
-  }
-
-  const { data: jobs, error } = await jobsQuery.order('published_at', { ascending: false });
+    .not('published_at', 'is', null)
+    .order('published_at', { ascending: false });
 
   if (error) {
     console.error('Unable to fetch published jobs.', error);
   }
 
-  const publishedJobs: JobRecord[] = jobs ?? [];
+  const publishedJobs: JobRecord[] = (jobs ?? []).filter((job) => {
+    const matchesCategory = !category || job.sector === category;
+    const matchesSearch =
+      !normalizedSearch ||
+      [job.title, job.company_name, job.location].some((value) =>
+        value.toLocaleLowerCase().includes(normalizedSearch),
+      );
+
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <main className="relative min-h-screen overflow-hidden text-slate-100">

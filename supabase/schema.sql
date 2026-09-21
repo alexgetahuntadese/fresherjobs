@@ -117,6 +117,8 @@ CREATE TABLE IF NOT EXISTS public.applications (
   phone TEXT NOT NULL,
   cv_url TEXT,
   cv_path TEXT,
+  cover_letter TEXT,
+  cover_letter_path TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT applications_cv_source_check CHECK (cv_url IS NOT NULL OR cv_path IS NOT NULL)
 );
@@ -155,6 +157,13 @@ CREATE POLICY "Allow authenticated application access"
 CREATE UNIQUE INDEX IF NOT EXISTS idx_applications_job_email
   ON public.applications (job_id, lower(email));
 
+ALTER TABLE public.applications ADD COLUMN IF NOT EXISTS cover_letter TEXT;
+ALTER TABLE public.applications ADD COLUMN IF NOT EXISTS cover_letter_path TEXT;
+
+CREATE INDEX IF NOT EXISTS idx_applications_cover_letter_path
+  ON public.applications (cover_letter_path)
+  WHERE cover_letter_path IS NOT NULL;
+
 CREATE INDEX IF NOT EXISTS idx_applications_cv_path
   ON public.applications (cv_path)
   WHERE cv_path IS NOT NULL;
@@ -177,6 +186,7 @@ WHERE id = 'cv-uploads';
 
 DROP POLICY IF EXISTS "Allow public CV uploads" ON storage.objects;
 DROP POLICY IF EXISTS "Allow authenticated CV access" ON storage.objects;
+DROP POLICY IF EXISTS "Allow authenticated application files" ON storage.objects;
 
 CREATE POLICY "Allow public CV uploads"
   ON storage.objects
@@ -204,7 +214,7 @@ CREATE POLICY "Allow authenticated CV access"
       OR EXISTS (
         SELECT 1 FROM public.applications
         JOIN public.jobs ON jobs.id = applications.job_id
-        WHERE applications.cv_path = storage.objects.name
+        WHERE (applications.cv_path = storage.objects.name OR applications.cover_letter_path = storage.objects.name)
           AND jobs.employer_id = auth.uid()
       )
     )

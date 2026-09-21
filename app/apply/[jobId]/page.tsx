@@ -52,7 +52,9 @@ export default async function ApplyPage({ params, searchParams }: ApplyPageProps
           ? 'Please provide a valid HTTP or HTTPS CV link.'
           : query?.error === 'invalid_cv_file'
             ? 'Please upload a PDF, DOC, or DOCX file up to 3 MB.'
-            : query?.error === 'duplicate_application'
+            : query?.error === 'invalid_cover_letter_file'
+            ? 'Your cover letter attachment must be a PDF, DOC, or DOCX file up to 3 MB.'
+          : query?.error === 'duplicate_application'
               ? 'An application from this email already exists for this job.'
                             : query?.error === 'upload_failed'
                 ? 'We could not upload that CV. Please try again or submit a public CV link instead.'
@@ -124,6 +126,15 @@ export default async function ApplyPage({ params, searchParams }: ApplyPageProps
                 <label className="mt-4 block space-y-2 text-sm text-slate-200">
                   <span>Or CV link</span>
                   <input name="cv_url" type="url" className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-4 py-3 text-slate-100 outline-none transition focus:border-violet-300" placeholder="https://drive.google.com/..." />
+                </label>
+                <label className="mt-4 block space-y-2 text-sm text-slate-200">
+                  <span>Cover letter (optional)</span>
+                  <textarea name="cover_letter" rows={6} className="w-full rounded-xl border border-white/10 bg-[#0d0b16] px-4 py-3 text-slate-100 outline-none transition focus:border-violet-300" placeholder="Tell the employer why you are a strong fit for this role." />
+                </label>
+                <label className="mt-4 block space-y-2 text-sm text-slate-200">
+                  <span>Attach cover letter (optional)</span>
+                  <input name="cover_letter_file" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="block w-full rounded-xl border border-white/10 bg-[#0d0b16] px-3 py-3 text-sm text-slate-300 file:mr-4 file:rounded-full file:border-0 file:bg-violet-400/15 file:px-3 file:py-2 file:text-sm file:font-medium file:text-violet-100" />
+                  <span className="block text-xs text-slate-400">PDF, DOC, or DOCX up to 3 MB.</span>
                 </label>
               </div>
 

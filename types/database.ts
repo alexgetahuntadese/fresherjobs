@@ -88,6 +88,8 @@ export type Database = {
           phone: string;
           cv_url: string | null;
           cv_path: string | null;
+          cover_letter: string | null;
+          cover_letter_path: string | null;
           created_at: string;
         };
         Insert: {
@@ -99,6 +101,8 @@ export type Database = {
           phone: string;
           cv_url?: string | null;
           cv_path?: string | null;
+          cover_letter?: string | null;
+          cover_letter_path?: string | null;
           created_at?: string;
         };
         Update: {
