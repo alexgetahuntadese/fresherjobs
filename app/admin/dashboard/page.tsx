@@ -276,7 +276,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       </div>
                     </div>
 
-                    <p className="mt-3 line-clamp-2 break-all text-sm leading-6 text-slate-300">{job.description}</p>
+                    <p className="mt-3 line-clamp-2 break-all text-sm font-semibold leading-6 text-slate-200">{job.description}</p>
 
                     <details className="mt-4 rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
                       <summary className="flex cursor-pointer select-none list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-violet-800 transition hover:bg-violet-400/10">
@@ -295,10 +295,12 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                               <time dateTime={application.created_at} className="shrink-0 text-xs font-semibold text-violet-600">{new Date(application.created_at).toLocaleDateString()}</time>
                             </div>
                             {application.cover_letter ? (
-                              <div id={`cover-letter-${application.id}`} className="mt-4 rounded-xl border border-violet-100 bg-violet-50/70 p-3">
-                                <p className="text-xs font-bold uppercase tracking-wide text-violet-600">Cover letter</p>
+                              <details id={`cover-letter-${application.id}`} className="mt-4 rounded-xl border border-violet-100 bg-violet-50/70 p-3">
+                                <summary className="cursor-pointer list-none text-xs font-bold uppercase tracking-wide text-violet-600">
+                                  View cover letter details
+                                </summary>
                                 <p className="mt-2 whitespace-pre-line break-words text-sm leading-6 text-violet-950">{application.cover_letter}</p>
-                              </div>
+                              </details>
                             ) : null}
                             <div className="mt-4 rounded-xl border border-violet-100 bg-violet-50/60 p-3" aria-label="Application documents">
                               <p className="text-xs font-bold uppercase tracking-wide text-violet-600">Application documents</p>
